@@ -6157,7 +6157,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="U$9" library="ava" deviceset="TE_CONNECTIVITY_1-770966-0" device="">
 <attribute name="FARNELL" value="1098556"/>
 </part>
-<part name="U$10" library="StevesCoilCraft" deviceset="COILCRAFT_LPS4018" device=""/>
+<part name="U$10" library="StevesCoilCraft" deviceset="COILCRAFT_LPS4018" device="" value="2.2µH"/>
 </parts>
 <sheets>
 <sheet>
@@ -7024,6 +7024,12 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <approved hash="104,1,233.68,132.08,U2,IN,V5V,,,"/>
 <approved hash="104,1,50.8,124.46,U3,VCCA,VCC,,,"/>
 <approved hash="104,1,50.8,121.92,U3,VCCB,V5V,,,"/>
+<approved hash="104,1,227.33,184.15,IC2,PGND,GND,,,"/>
+<approved hash="104,1,227.33,179.07,IC2,PP,GND,,,"/>
+<approved hash="104,1,227.33,176.53,IC2,PP,GND,,,"/>
+<approved hash="104,1,227.33,173.99,IC2,PP,GND,,,"/>
+<approved hash="106,1,115.57,173.99,9/NC,,,,,"/>
+<approved hash="106,1,115.57,171.45,10/,,,,,"/>
 <approved hash="208,1,274.32,83.82,VCC,sup,,,,"/>
 <approved hash="208,1,269.24,132.08,VCC,out,,,,"/>
 <approved hash="208,1,284.48,132.08,VCC,sup,,,,"/>
@@ -7031,8 +7037,10 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <approved hash="115,1,113.623,56.0747,JP1,,,,,"/>
 <approved hash="115,1,113.623,76.3947,JP2,,,,,"/>
 <approved hash="115,1,1.46473,59.0973,JP3,,,,,"/>
+<approved hash="115,1,67.5047,180.666,RESET_LOCKOUT,,,,,"/>
 <approved hash="115,1,285.75,72.7913,C2,,,,,"/>
 <approved hash="115,1,92.0327,35.7547,JP4,,,,,"/>
+<approved hash="115,1,214.63,215.024,U$10,,,,,"/>
 </errors>
 </schematic>
 </drawing>
