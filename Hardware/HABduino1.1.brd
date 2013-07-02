@@ -176,6 +176,7 @@ transmit.</text>
 <text x="9.525" y="13.81125" size="2.54" layer="21" font="vector" ratio="10">+</text>
 <text x="9.525" y="17.93875" size="2.54" layer="21" font="vector" ratio="10">-</text>
 <text x="21.9075" y="16.1925" size="2.54" layer="21" font="vector" ratio="10">.</text>
+<text x="2.69875" y="23.1775" size="1.778" layer="21" font="vector">5V MAX</text>
 </plain>
 <libraries>
 <library name="ava">
