@@ -89,6 +89,7 @@ char callsign[9] = "HABDUINO";
 /* APRS Settings */
 //#define APRS // Uncomment to use APRS.
 
+
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
 #define PREAMBLE_BYTES (50)
@@ -116,11 +117,26 @@ volatile boolean lockvariables = 0;
 volatile static uint8_t *_txbuf = 0;
 volatile static uint8_t  _txlen = 0;
 
+int errorstatus=0;
+/* Error Status Bit Level Field :
+ Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
+ Bit 1 = GPS Error Condition Noted Cold Boot GPS
+ Bit 2 = Not used in HABduino
+ Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
+ Bit 4 = PSM Status 0 = PSM On 1 = PSM Off                   
+ Bit 5 = Lock 0 = GPS Locked 1= Not Locked
+
+So error 8 means the everything is fine just the GPS is in pedestrian mode. 
+Below 1000 meters the code puts the GPS in the more accurate pedestrian mode. 
+Above 1000 meters it switches to dynamic model 6 i.e flight mode and turns the LED's off for additional power saving. 
+So as an example error code 40 = 101000 means GPS not locked and in pedestrian mode. 
+*/
+
 char txstring[80];
 uint8_t buf[60]; 
 uint8_t lock =0, sats = 0, hour = 0, minute = 0, second = 0;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
-int errorstatus=0, GPSerror = 0,navmode = 0,psm_status = 0,lat_int=0,lon_int=0, temperature=0;
+int GPSerror = 0,navmode = 0,psm_status = 0,lat_int=0,lon_int=0, temperature=0;
 int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0 ,tslf=0;
 int led_timer=ONE_SECOND;
 unsigned long currentMillis;
