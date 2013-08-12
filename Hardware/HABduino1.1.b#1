@@ -4929,7 +4929,7 @@ design rules under a new name.</description>
 <contactref element="R5" pad="2"/>
 <wire x1="33.49625" y1="26.93125" x2="34.3925" y2="26.035" width="0.254" layer="1"/>
 </signal>
-<signal name="8/LMT2_N_TXE">
+<signal name="8/LMT2_N_TXD">
 <contactref element="U$2" pad="N_TXE"/>
 <contactref element="U1" pad="D8"/>
 <wire x1="41.91" y1="50.8" x2="41.91" y2="48.10125" width="0.254" layer="1"/>

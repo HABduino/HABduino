@@ -6682,7 +6682,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="-22.86" y1="127" x2="-22.86" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="8/LMT2_N_TXE" class="0">
+<net name="8/LMT2_N_TXD" class="0">
 <segment>
 <pinref part="U$2" gate="G$1" pin="N_TXD"/>
 <wire x1="-35.56" y1="213.36" x2="-35.56" y2="196.85" width="0.1524" layer="91"/>
