@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- June 2013 Version 1
+ August 2013 Version 1.1
  
  Credits :
  
@@ -17,11 +17,19 @@
  GPS Code from jonsowman and Joey flight computer CUSF
  https://github.com/cuspaceflight/joey-m/tree/master/firmware
  
+ LMT2 N&R Calculation code Daniel Richman & Adam Greig :
+ From python fractions.Fraction.limit_denominator
+ Originally contributed by Sjoerd Mullender.
+ Significantly modified by Jeffrey Yasskin <jyasskin at gmail.com>.
+ Ported to C by Daniel Richman 
+
  Thanks to :
  
  Phil Heron
  James Coxon
  Dave Akerman
+ 
+ The UKHAS Community http://ukhas.org.uk
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -35,6 +43,15 @@
  
  See <http://www.gnu.org/licenses/>.
  */
+ 
+/* BITS YOU WANT TO AMEND */
+
+#define LMT2_FREQ 434650000   
+char callsign[9] = "HABDUINO";
+
+/* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
+
+//#define APRS // Uncomment to use APRS.
 
 #include <util/crc16.h>
 #include <avr/io.h>
@@ -54,41 +71,27 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define LED_WARN 12
 #define LED_OK 13
 #define LMT2_SHIFT 425        
-#define LMT2_OFFSET 25          // 0-100 Slightly adjusts the frequency by increasing the PWM 
+#define LMT2_OFFSET 0          // 0-100 Slightly adjusts the frequency by increasing the PWM 
 #define LMT2_TXD 11
 #define LMT2_ENABLE 8
-#define LMT2_CHANNEL 15
 
-/* LMT2 CHANNELS :
- 0  = 433.896  16 = 433.871
- 1  = 433.946  17 = 433.921
- 2  = 433.996  18 = 433.971
- 3  = 434.046  19 = 434.021
- 4  = 434.096  20 = 434.071
- 5  = 434.146  21 = 434.121
- 6  = 434.196  22 = 434.171
- 7  = 434.246  23 = 434.221
- 8  = 434.296  24 = 434.271
- 9  = 434.346  25 = 434.321
- 10 = 434.396  26 = 434.371
- 11 = 434.446  27 = 434.421
- 12 = 434.496  28 = 434.471
- 13 = 434.546  29 = 434.521
- 14 = 434.596  30 = 434.571
- 15 = 434.646  31 = 434.621
- */
 
+#define max_denominator 1300
+uint16_t best_r = 0, best_n = 0;
 #define HX1_ENABLE 6
 #define HX1_TXD 3
 #define GPS_ON 2
 #define POWERSAVING
 #define ONE_WIRE_BUS 5
 #define ONE_SECOND F_CPU / 1024 / 16
-char callsign[9] = "HABDUINO";
 
-/* APRS Settings */
-//#define APRS // Uncomment to use APRS.
 
+
+struct frequency_rational
+{
+  uint16_t n;
+  uint16_t r;
+};
 
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
@@ -105,7 +108,6 @@ char callsign[9] = "HABDUINO";
 SoftwareSerial LMT2_P0(12, 7); // RX, TX
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
-
 
 volatile int txstatus=1;
 volatile int txstringlength=0;
@@ -156,7 +158,7 @@ void setup()  {
   pinMode(LMT2_ENABLE, OUTPUT);
   pinMode(GPS_ON, OUTPUT);
   blinkled(6);
-  lmt2_setchan();
+  setLMT2Frequency(LMT2_FREQ);
   Serial.begin(9600);
   digitalWrite(LMT2_ENABLE,LOW);
   blinkled(5);
@@ -166,9 +168,9 @@ void setup()  {
   setPwmFrequency(LMT2_TXD, 1);
   setupGPS();
   initialise_interrupt();
-#ifdef POWERSAVING
-  ADCSRA = 0;
-#endif
+  #ifdef POWERSAVING
+    ADCSRA = 0;
+  #endif
   sensors.begin();
 } 
 
@@ -786,20 +788,6 @@ void gps_get_time()
   }
 }
 
-void lmt2_setchan() {
-  char setchannel[12];
-  sprintf(setchannel,"GOCHAN %i", LMT2_CHANNEL); 
-  LMT2_P0.begin(2400);
-  wait(500);
-  LMT2_P0.println("ENABLESERIALMODE");
-  wait(50);
-  LMT2_P0.println(setchannel);
-  wait(50);
-  LMT2_P0.println("#");
-  wait(50);
-  LMT2_P0.end();
-}
-
 void send_APRS() {
   ax25_init();
   digitalWrite(HX1_ENABLE, HIGH);
@@ -1003,6 +991,113 @@ static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)
   return(s);
 }
 
+void setLMT2Frequency(int32_t freq_target_hz)
+  {
+  char lmt2command[12];
+  struct frequency_rational r;
+  r = frequency_magic(freq_target_hz+5000);
+  LMT2_P0.begin(2400);
+  wait(500);
+  LMT2_P0.println("ENABLESERIALMODE");
+  wait(50);
+  snprintf(lmt2command,12,"RVALUE %u", r.r); 
+  LMT2_P0.println(lmt2command);
+  wait(50);
+  snprintf(lmt2command,13,"SINGLE %u", r.n); 
+  LMT2_P0.println(lmt2command);
+  wait(50);
+  LMT2_P0.println("#");
+  wait(50);
+  LMT2_P0.end();
+  }    
+
+static inline uint32_t hcf(uint32_t a, uint32_t b)
+{
+  while (b)
+  {
+    uint32_t temp;
+    temp = a;
+    a = b;
+    b = temp % b;
+  }
+  return a;
+}
+static inline int64_t abs64(int64_t v)
+{
+  if (v < 0)
+    return -v;
+  else
+    return v;
+}
+struct frequency_rational frequency_magic(uint32_t on)
+{
+    struct frequency_rational r;
+    uint16_t p0 = 0, q0 = 1, p1 = 1, q1 = 0, k;
+    uint32_t q2, a, n, d, h;
+    uint32_t od = 13000000;
+    int64_t compare_p0, compare_p1, compare_n;
+
+    h = hcf(on, od);
+    on /= h;
+    od /= h;
+
+    n = on;
+    d = od;
+
+    if (d <= max_denominator)
+    {
+        r.n = n;
+        r.r = d;
+        return r;
+    }
+
+    for (;;)
+    {
+        uint32_t tempd, tempp1, tempq1;
+
+        tempd = d;
+        a = n / d;  /* gcc should optimise this to one call to divmod. */
+        d = n % d;
+        n = tempd;
+
+        /* if a > max, then q2 > max since after first loop q1 > 1.
+         * This check ensures it doesn't overflow. */
+        if (a > max_denominator)
+            break;
+        q2 = q0 + ((uint32_t) (((uint16_t) a) * q1));
+        if (q2 > max_denominator)
+            break;
+
+        tempp1 = p1;
+        tempq1 = q1;
+        p1 = p0 + ((uint16_t) a) * p1;
+        q1 = q2;
+        p0 = tempp1;
+        q0 = tempq1;
+    }
+
+    k = (max_denominator - q0) / q1;
+
+    p0 = p0 + k * p1;
+    q0 = q0 + k * q1;
+
+    /* which of p0/q0  p1/q1 is closest. */
+    compare_n  = ((uint64_t) on) * ((uint64_t) q0) *  ((uint64_t) q1);
+    compare_p0 = ((uint64_t) od) * ((uint64_t) p0) *  ((uint64_t) q1);
+    compare_p1 = ((uint64_t) od) * ((uint64_t) q0) *  ((uint64_t) p1);
+
+    if (abs64(compare_p0 - compare_n) < abs64(compare_p1 - compare_n))
+    {
+        r.n = p0;
+        r.r = q0;
+    }
+    else
+    {
+        r.n = p1;
+        r.r = q1;
+    }
+    return r;
+}
 
 
 
