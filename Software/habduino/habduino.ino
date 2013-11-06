@@ -22,7 +22,7 @@
  Originally contributed by Sjoerd Mullender.
  Significantly modified by Jeffrey Yasskin <jyasskin at gmail.com>.
  Ported to C by Daniel Richman 
-
+ 
  Thanks to :
  
  Phil Heron
@@ -43,7 +43,7 @@
  
  See <http://www.gnu.org/licenses/>.
  */
- 
+
 /* BITS YOU WANT TO AMEND */
 
 #define LMT2_FREQ 434650000   
@@ -127,12 +127,12 @@ int errorstatus=0;
  Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
  Bit 4 = PSM Status 0 = PSM On 1 = PSM Off                   
  Bit 5 = Lock 0 = GPS Locked 1= Not Locked
-
-So error 8 means the everything is fine just the GPS is in pedestrian mode. 
-Below 1000 meters the code puts the GPS in the more accurate pedestrian mode. 
-Above 1000 meters it switches to dynamic model 6 i.e flight mode and turns the LED's off for additional power saving. 
-So as an example error code 40 = 101000 means GPS not locked and in pedestrian mode. 
-*/
+ 
+ So error 8 means the everything is fine just the GPS is in pedestrian mode. 
+ Below 1000 meters the code puts the GPS in the more accurate pedestrian mode. 
+ Above 1000 meters it switches to dynamic model 6 i.e flight mode and turns the LED's off for additional power saving. 
+ So as an example error code 40 = 101000 means GPS not locked and in pedestrian mode. 
+ */
 
 char txstring[80];
 uint8_t buf[60]; 
@@ -168,9 +168,9 @@ void setup()  {
   setPwmFrequency(LMT2_TXD, 1);
   setupGPS();
   initialise_interrupt();
-  #ifdef POWERSAVING
-    ADCSRA = 0;
-  #endif
+#ifdef POWERSAVING
+  ADCSRA = 0;
+#endif
   sensors.begin();
 } 
 
@@ -427,7 +427,7 @@ void rtty_txbit (int bit)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                                                   };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                                                         };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void sendUBX(uint8_t *MSG, uint8_t len) {
@@ -443,16 +443,16 @@ void setupGPS() {
   // Taken from Project Swift (rather than the old way of sending ascii text)
   int gps_set_sucess=0;
   uint8_t setNMEAoff[] = {
-    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9                          };
+    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9                                };
   sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
-   while(!gps_set_sucess)
+  while(!gps_set_sucess)
   {
     sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
     gps_set_sucess=getUBX_ACK(setNMEAoff);
     if(!gps_set_sucess)
-      {
-        blinkled(2);
-      }
+    {
+      blinkled(2);
+    }
 
   }
   wait(500);
@@ -470,7 +470,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                                             };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                                                   };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -486,7 +486,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                                             };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                                                   };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -496,7 +496,7 @@ void setGPS_DynamicModel3()
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                                             }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                                                   }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 
@@ -589,7 +589,7 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                                             };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                                                   };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -670,7 +670,7 @@ void checkDynamicModel() {
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                                             }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                                                   }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 void prepare_data() {
@@ -687,7 +687,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                                                  };
+    0x07, 0x16                                                                                                                                        };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -725,7 +725,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                                              };
+    0x0A                                                                                                                                    };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -742,23 +742,30 @@ void gps_get_position()
   }
 
   if(GPSerror == 0) {
-    // 4 bytes of longitude (1e-7)
-    lon = (int32_t)buf[10] | (int32_t)buf[11] << 8 | 
-      (int32_t)buf[12] << 16 | (int32_t)buf[13] << 24;
-
+    if(sats<4)
+    {
+      lat=0;
+      lon=0;
+      alt=0;
+    }
+    else
+    {
+      lon = (int32_t)buf[10] | (int32_t)buf[11] << 8 | 
+        (int32_t)buf[12] << 16 | (int32_t)buf[13] << 24;
+      lat = (int32_t)buf[14] | (int32_t)buf[15] << 8 | 
+        (int32_t)buf[16] << 16 | (int32_t)buf[17] << 24;
+      alt = (int32_t)buf[22] | (int32_t)buf[23] << 8 | 
+        (int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
+    }
+    // 4 bytes of latitude/longitude (1e-7)
     lon_int=abs(lon/10000000);
     lon_dec=(labs(lon) % 10000000)/10;
-    // 4 bytes of latitude (1e-7)
-    lat = (int32_t)buf[14] | (int32_t)buf[15] << 8 | 
-      (int32_t)buf[16] << 16 | (int32_t)buf[17] << 24;
-
     lat_int=abs(lat/10000000);
     lat_dec=(labs(lat) % 10000000)/10;
 
 
     // 4 bytes of altitude above MSL (mm)
-    alt = (int32_t)buf[22] | (int32_t)buf[23] << 8 | 
-      (int32_t)buf[24] << 16 | (int32_t)buf[25] << 24;
+
     alt /= 1000; // Correct to meters
   }
 
@@ -770,7 +777,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                                            };
+    0x22, 0x67                                                                                                                                  };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -1003,7 +1010,7 @@ static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)
 }
 
 void setLMT2Frequency(int32_t freq_target_hz)
-  {
+{
   char lmt2command[12];
   struct frequency_rational r;
   r = frequency_magic(freq_target_hz+5000);
@@ -1020,7 +1027,7 @@ void setLMT2Frequency(int32_t freq_target_hz)
   LMT2_P0.println("#");
   wait(50);
   LMT2_P0.end();
-  }    
+}    
 
 static inline uint32_t hcf(uint32_t a, uint32_t b)
 {
@@ -1042,73 +1049,76 @@ static inline int64_t abs64(int64_t v)
 }
 struct frequency_rational frequency_magic(uint32_t on)
 {
-    struct frequency_rational r;
-    uint16_t p0 = 0, q0 = 1, p1 = 1, q1 = 0, k;
-    uint32_t q2, a, n, d, h;
-    uint32_t od = 13000000;
-    int64_t compare_p0, compare_p1, compare_n;
+  struct frequency_rational r;
+  uint16_t p0 = 0, q0 = 1, p1 = 1, q1 = 0, k;
+  uint32_t q2, a, n, d, h;
+  uint32_t od = 13000000;
+  int64_t compare_p0, compare_p1, compare_n;
 
-    h = hcf(on, od);
-    on /= h;
-    od /= h;
+  h = hcf(on, od);
+  on /= h;
+  od /= h;
 
-    n = on;
-    d = od;
+  n = on;
+  d = od;
 
-    if (d <= max_denominator)
-    {
-        r.n = n;
-        r.r = d;
-        return r;
-    }
-
-    for (;;)
-    {
-        uint32_t tempd, tempp1, tempq1;
-
-        tempd = d;
-        a = n / d;  /* gcc should optimise this to one call to divmod. */
-        d = n % d;
-        n = tempd;
-
-        /* if a > max, then q2 > max since after first loop q1 > 1.
-         * This check ensures it doesn't overflow. */
-        if (a > max_denominator)
-            break;
-        q2 = q0 + ((uint32_t) (((uint16_t) a) * q1));
-        if (q2 > max_denominator)
-            break;
-
-        tempp1 = p1;
-        tempq1 = q1;
-        p1 = p0 + ((uint16_t) a) * p1;
-        q1 = q2;
-        p0 = tempp1;
-        q0 = tempq1;
-    }
-
-    k = (max_denominator - q0) / q1;
-
-    p0 = p0 + k * p1;
-    q0 = q0 + k * q1;
-
-    /* which of p0/q0  p1/q1 is closest. */
-    compare_n  = ((uint64_t) on) * ((uint64_t) q0) *  ((uint64_t) q1);
-    compare_p0 = ((uint64_t) od) * ((uint64_t) p0) *  ((uint64_t) q1);
-    compare_p1 = ((uint64_t) od) * ((uint64_t) q0) *  ((uint64_t) p1);
-
-    if (abs64(compare_p0 - compare_n) < abs64(compare_p1 - compare_n))
-    {
-        r.n = p0;
-        r.r = q0;
-    }
-    else
-    {
-        r.n = p1;
-        r.r = q1;
-    }
+  if (d <= max_denominator)
+  {
+    r.n = n;
+    r.r = d;
     return r;
+  }
+
+  for (;;)
+  {
+    uint32_t tempd, tempp1, tempq1;
+
+    tempd = d;
+    a = n / d;  /* gcc should optimise this to one call to divmod. */
+    d = n % d;
+    n = tempd;
+
+    /* if a > max, then q2 > max since after first loop q1 > 1.
+     * This check ensures it doesn't overflow. */
+    if (a > max_denominator)
+      break;
+    q2 = q0 + ((uint32_t) (((uint16_t) a) * q1));
+    if (q2 > max_denominator)
+      break;
+
+    tempp1 = p1;
+    tempq1 = q1;
+    p1 = p0 + ((uint16_t) a) * p1;
+    q1 = q2;
+    p0 = tempp1;
+    q0 = tempq1;
+  }
+
+  k = (max_denominator - q0) / q1;
+
+  p0 = p0 + k * p1;
+  q0 = q0 + k * q1;
+
+  /* which of p0/q0  p1/q1 is closest. */
+  compare_n  = ((uint64_t) on) * ((uint64_t) q0) *  ((uint64_t) q1);
+  compare_p0 = ((uint64_t) od) * ((uint64_t) p0) *  ((uint64_t) q1);
+  compare_p1 = ((uint64_t) od) * ((uint64_t) q0) *  ((uint64_t) p1);
+
+  if (abs64(compare_p0 - compare_n) < abs64(compare_p1 - compare_n))
+  {
+    r.n = p0;
+    r.r = q0;
+  }
+  else
+  {
+    r.n = p1;
+    r.r = q1;
+  }
+  return r;
 }
+
+
+
 
 
 
