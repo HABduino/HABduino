@@ -46,7 +46,7 @@
 
 /* BITS YOU WANT TO AMEND */
 
-#define LMT2_FREQ 434650000   
+#define LMT2_FREQ 434650000     // Transmission frequency e.g 434650000 = 434.650Mhz
 char callsign[9] = "HABDUINO";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
@@ -98,7 +98,7 @@ struct frequency_rational
 #define PREAMBLE_BYTES (50)
 #define REST_BYTES     (5)
 
-#define APRS_TX_INTERVAL 1  // APRS TX Interval 120000 = 2 min
+#define APRS_TX_INTERVAL 1  // APRS TX Interval in minutes
 #define PLAYBACK_RATE    (F_CPU / 256)
 #define SAMPLES_PER_BAUD (PLAYBACK_RATE / BAUD_RATE)
 #define PHASE_DELTA_1200 (((TABLE_SIZE * 1200L) << 7) / PLAYBACK_RATE)
@@ -355,7 +355,7 @@ ISR(TIMER1_COMPA_vect)
     lockvariables=1;
     sprintf(txstring, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,errorstatus,temperature);
 #ifdef APRS
-    sprintf(txstring, "%i",aprs_attempts);
+    sprintf(txstring, "%s,%i",txstring,aprs_attempts);
 #endif
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
@@ -794,7 +794,7 @@ void gps_get_time()
   }
 
   if(GPSerror == 0) {
-    if(hour > 23 || minute > 59 || second > 59)
+    if(buf[22] > 23 || buf[23] > 59 || buf[24] > 59)
     {
       GPSerror = 34;
     }
@@ -855,10 +855,10 @@ void tx_aprs()
   //0, 0, 0, 0,
   "WIDE1", 1, "WIDE2",1,
   //"WIDE2", 1,
-  "!/%s%sO   /A=%06ld|%s|%s/%s,%d,%i,ALSO RTTY/434.45U7N2",
+  "!/%s%sO   /A=%06ld|%s|%s/%s,%d,%i,%i'C,http://habduino.org",
   ax25_base91enc(slat, 4, aprs_lat),
   ax25_base91enc(slng, 4, aprs_lon),
-  aprs_alt, stlm, comment,APRS_CALLSIGN, count, errorstatus
+  aprs_alt, stlm, comment,APRS_CALLSIGN, count, errorstatus,temperature
     );
 
   seq++;
