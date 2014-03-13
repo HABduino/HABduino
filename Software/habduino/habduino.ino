@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- August 2013 Version 1.1
+ March 2014 Version 1.2
  
  Credits :
  
@@ -47,7 +47,7 @@
 /* BITS YOU WANT TO AMEND */
 
 #define LMT2_FREQ 434650000     // Transmission frequency e.g 434650000 = 434.650Mhz
-char callsign[9] = "HABDUINO";  // MAX 9 CHARACTERS!!
+char callsign[9] = "CHANGEME";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
 
@@ -70,7 +70,8 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define RTTY_BAUD 50     // RTTY Baud rate (Recommended = 50)
 #define LED_WARN 12
 #define LED_OK 13
-#define LMT2_SHIFT 425        
+#define BATTERY_ADC A0
+#define LMT2_SHIFT 500        
 #define LMT2_OFFSET 0          // 0-100 Slightly adjusts the frequency by increasing the PWM 
 #define LMT2_TXD 11
 #define LMT2_ENABLE 8
@@ -123,7 +124,7 @@ int errorstatus=0;
 /* Error Status Bit Level Field :
  Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
  Bit 1 = GPS Error Condition Noted Cold Boot GPS
- Bit 2 = Not used in HABduino
+ Bit 2 = DS18B20 temp sensor status 0 = OK 1 = Fault
  Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
  Bit 4 = PSM Status 0 = PSM On 1 = PSM Off                   
  Bit 5 = Lock 0 = GPS Locked 1= Not Locked
@@ -140,10 +141,9 @@ uint8_t lock =0, sats = 0, hour = 0, minute = 0, second = 0;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int GPSerror = 0,navmode = 0,psm_status = 0,lat_int=0,lon_int=0, temperature=0;
 int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0 ,tslf=0;
-int led_timer=ONE_SECOND;
 unsigned long currentMillis;
 long previousMillis = 0;
-int ledState = LOW; 
+int batteryadc_v; 
 int aprs_tx_status = 0, aprs_attempts = 0;
 unsigned long startTime;
 char comment[3]={
@@ -157,6 +157,7 @@ void setup()  {
   pinMode(LED_OK,OUTPUT);
   pinMode(LMT2_ENABLE, OUTPUT);
   pinMode(GPS_ON, OUTPUT);
+  pinMode(BATTERY_ADC, INPUT);
   blinkled(6);
   setLMT2Frequency(LMT2_FREQ);
   Serial.begin(9600);
@@ -168,9 +169,6 @@ void setup()  {
   setPwmFrequency(LMT2_TXD, 1);
   setupGPS();
   initialise_interrupt();
-#ifdef POWERSAVING
-  ADCSRA = 0;
-#endif
   sensors.begin();
 } 
 
@@ -182,11 +180,11 @@ void loop()   {
 
   if(lock!=3) // Blink LED to indicate no lock
   {
-    errorstatus |=(1 << 5);     
+    errorstatus |=(1 << 5);  // Set bit 5 (Lock 0 = GPS Locked 1= Not Locked)
   }
   else
   {
-    errorstatus &= ~(1 << 5);
+    errorstatus &= ~(1 << 5); // Unset bit 5 (Lock 0 = GPS Locked 1= Not Locked)
   }
   checkDynamicModel();
 
@@ -207,13 +205,12 @@ void loop()   {
 
 
 #ifdef POWERSAVING
-  if((lock==3) && (psm_status==0) && (sats>=5) &&((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0))
+  if((lock==3) && (psm_status==0) && (sats>=5) &&((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0)) // Check we aren't in an error condition
   {
     setGPS_PowerSaveMode();
     wait(1000);
-    pinMode(LED_WARN, INPUT); 
     psm_status=1;
-    errorstatus &= ~(1 << 4);
+    errorstatus &= ~(1 << 4); // Set Bit 4 Indicating PSM is on
   }
 #endif
   if(!lockvariables) {
@@ -223,16 +220,32 @@ void loop()   {
     {
       maxalt=alt;
     }
-
-    if((oldhour==hour&&oldminute==minute&&oldsecond==second)||sats<=4) {
-      tslf++;
-    }
-    else
-    {
-      tslf=0;
-      errorstatus &= ~(1 << 0);
-      errorstatus &= ~(1 << 1);
-    }
+  }
+  if((oldhour==hour&&oldminute==minute&&oldsecond==second)||sats<=4) {
+    tslf++;
+  }
+  else
+  {
+    tslf=0;
+    errorstatus &= ~(1 << 0); // Unset bit 0 (Clear GPS Error Condition Noted Switch to Max Performance Mode)
+    errorstatus &= ~(1 << 1); // Unset bit 1 (Clear GPS Error Condition Noted Cold Boot GPS)
+  }
+  if((tslf>10 && ((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0))) {
+    setupGPS();
+    wait(125);
+    setGps_MaxPerformanceMode();
+    wait(125);
+    errorstatus |=(1 << 0); // Set Bit 1 (GPS Error Condition Noted Switch to Max Performance Mode)
+    psm_status=0;
+    errorstatus |=(1 << 4); // Set Bit 4 (Indicate PSM is disabled)
+  }
+  if(tslf>100 && ((errorstatus & (1 << 0))==1)&&((errorstatus & (1 << 1))==0)) {
+    errorstatus |=(1 << 0); // Unset Bit 0 we've already tried that didn't work
+    errorstatus |=(1 << 1); // Set bit 1 indicating we are cold booting the GPS
+    Serial.flush();
+    resetGPS();
+    wait(125);
+    setupGPS();
   }
 }
 
@@ -323,18 +336,18 @@ ISR(TIMER1_COMPA_vect)
   else 
   {
     currentMillis = millis();
-    if(currentMillis - previousMillis > led_timer) {
+    if(currentMillis - previousMillis > ONE_SECOND) 
+    {
       previousMillis = currentMillis;   
-
-      if(errorstatus==8)
+      if(errorstatus!=8)
       {
-        digitalWrite(LED_OK, !digitalRead(LED_OK)); 
-        digitalWrite(LED_WARN,LOW);      
+        digitalWrite(LED_WARN,!digitalRead(LED_WARN));
+        digitalWrite(LED_OK,LOW);  
       }
       else 
       {
-        digitalWrite(LED_WARN,!digitalRead(LED_WARN));
-        digitalWrite(LED_OK,LOW);
+        digitalWrite(LED_OK, !digitalRead(LED_OK)); 
+        digitalWrite(LED_WARN,LOW);    
       }
     }
   }
@@ -353,7 +366,7 @@ ISR(TIMER1_COMPA_vect)
       maxalt=alt;
     }
     lockvariables=1;
-    sprintf(txstring, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,errorstatus,temperature);
+    sprintf(txstring, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature,batteryadc_v,errorstatus);
 #ifdef APRS
     sprintf(txstring, "%s,%i",txstring,aprs_attempts);
 #endif
@@ -417,8 +430,7 @@ void rtty_txbit (int bit)
 {
   if (bit)
   {
-    //  int shift = LMT2_SHIFT;
-    analogWrite(LMT2_TXD, LMT2_OFFSET+(LMT2_SHIFT/26.5)); // High
+    analogWrite(LMT2_TXD, LMT2_OFFSET+(LMT2_SHIFT/16)); // High
   }
   else
   {
@@ -427,7 +439,7 @@ void rtty_txbit (int bit)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                                                         };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                                                                 };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void sendUBX(uint8_t *MSG, uint8_t len) {
@@ -443,7 +455,7 @@ void setupGPS() {
   // Taken from Project Swift (rather than the old way of sending ascii text)
   int gps_set_sucess=0;
   uint8_t setNMEAoff[] = {
-    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9                                };
+    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9                                        };
   sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
   while(!gps_set_sucess)
   {
@@ -470,7 +482,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                                                   };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                                                           };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -486,7 +498,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                                                   };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                                                           };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -496,7 +508,7 @@ void setGPS_DynamicModel3()
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                                                   }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                                                           }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 
@@ -589,7 +601,7 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                                                   };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                                                           };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -655,14 +667,14 @@ void checkDynamicModel() {
     if(navmode != 3)
     {
       setGPS_DynamicModel3();
-      errorstatus |=(1 << 3);      
+      errorstatus |=(1 << 3);  // Set Bit 3 indicating we are in pedestrian mode    
     }
   }
   else
   {
     if(navmode != 6){
       setGPS_DynamicModel6();
-      errorstatus &= ~(1 << 3);
+      errorstatus &= ~(1 << 3); // Unset bit 3 indicating we are in flight mode
 
     }
   }
@@ -670,15 +682,24 @@ void checkDynamicModel() {
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                                                   }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                                                           }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 void prepare_data() {
   sensors.requestTemperatures();
   temperature=sensors.getTempCByIndex(0);
+  if(temperature==-127)
+  {
+    errorstatus |=(1 << 2); // Set bit 2 indicating the temp sensor is faulty
+  }
+  else
+  {
+    errorstatus &= ~(1 << 2); // Unset bit 2 indicating temp sensor is ok.
+  } 
   gps_check_lock();
   gps_get_position();
   gps_get_time();
+  batteryadc_v=analogRead(A0)*4.8;
 }
 void gps_check_lock()
 {
@@ -687,7 +708,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                                                        };
+    0x07, 0x16                                                                                                                                                };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -725,7 +746,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                                                    };
+    0x0A                                                                                                                                            };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -777,7 +798,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                                                  };
+    0x22, 0x67                                                                                                                                          };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -1116,6 +1137,10 @@ struct frequency_rational frequency_magic(uint32_t on)
   }
   return r;
 }
+
+
+
+
 
 
 
