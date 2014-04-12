@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- April 2014 Version 1.3.1
+ April 2014 Version 1.3.2
  
  Credits :
  
@@ -69,8 +69,8 @@
 
 /* BITS YOU WANT TO AMEND */
 
-#define LMT2_FREQ 434490000     // Transmission frequency e.g 434650000 = 434.650Mhz
-char callsign[9] = "AVA";  // MAX 9 CHARACTERS!!
+#define LMT2_FREQ 434650000     // Transmission frequency e.g 434650000 = 434.650Mhz
+char callsign[9] = "CHANGEME";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
 
@@ -394,18 +394,27 @@ ISR(TIMER1_COMPA_vect)
       maxalt=alt;
     }
     lockvariables=1;
+#ifndef APRS
     if(tempsensors==1)
     {
-      sprintf(txstring, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,errorstatus);
+      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,errorstatus);
     }
     else
     {
-      sprintf(txstring, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,errorstatus);
+      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,errorstatus);
     }
-#ifdef APRS
-    sprintf(txstring, "%s,%i",txstring,aprs_attempts);
 #endif
-    sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
+#ifdef APRS
+    if(tempsensors==1)
+    {
+      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,aprs_attempts,errorstatus);
+    }
+    else
+    {
+      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,aprs_attempts,errorstatus);
+    }
+#endif
+    crccat(txstring);
     maxalt=0;
     lockvariables=0;
     txstringlength=strlen(txstring);
@@ -1193,6 +1202,22 @@ struct frequency_rational frequency_magic(uint32_t on)
 }
 
 
+uint16_t crccat(char *msg)
+{
+  uint16_t x;
+
+
+  while(*msg == '$') msg++;
+
+
+  for(x = 0xFFFF; *msg; msg++)
+    x = _crc_xmodem_update(x, *msg);
+
+
+  snprintf_P(msg, 8, PSTR("*%04X\n"), x);
+
+  return(x);
+}
 
 
 
