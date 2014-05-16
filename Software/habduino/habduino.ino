@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- April 2014 Version 1.3.2
+ May 2014 Version 1.3.3
  
  Credits :
  
@@ -158,7 +158,7 @@ int errorstatus=0;
  So as an example error code 40 = 101000 means GPS not locked and in pedestrian mode. 
  */
 
-char txstring[80];
+char txstring[100];
 uint8_t buf[60]; 
 uint8_t lock =0, sats = 0, hour = 0, minute = 0, second = 0;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
@@ -397,21 +397,21 @@ ISR(TIMER1_COMPA_vect)
 #ifndef APRS
     if(tempsensors==1)
     {
-      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,errorstatus);
+      snprintf(txstring,100, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,errorstatus);
     }
     else
     {
-      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,errorstatus);
+      snprintf(txstring,100, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,errorstatus);
     }
 #endif
 #ifdef APRS
     if(tempsensors==1)
     {
-      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,aprs_attempts,errorstatus);
+      snprintf(txstring,100, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,battvaverage,aprs_attempts,errorstatus);
     }
     else
     {
-      snprintf(txstring,80, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,aprs_attempts,errorstatus);
+      snprintf(txstring,100, "$$$$$%s,%i,%02d:%02d:%02d,%s%i.%06ld,%s%i.%06ld,%ld,%d,%i,%i,%i,%i,%02x",callsign,count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,temperature1,temperature2,battvaverage,aprs_attempts,errorstatus);
     }
 #endif
     crccat(txstring);
