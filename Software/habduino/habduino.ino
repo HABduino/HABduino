@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- May 2014 Version 1.3.3
+ May 2014 Version 1.3.4
  
  Credits :
  
@@ -49,10 +49,10 @@
  radiation levels. We have no control over the effectiveness of your payload design especially the 
  temperature and electromagnetic conditions  within, thus we make no warrnaty express or implied as to
  the ability of our products to operate to any degree of effectiveness when used in your application.
-
+ 
  If you decide to use this product under a balloon it’s your responsibility to ensure you comply with the 
  local legislation and laws regarding meteorological balloon launching and radio transmission in the air. 
-
+ 
  The Radiometrix LMT2 434Mhz is NOT license exempt in the United States of America and does need a radio
  amateur license.  Use of APRS requires a radio amateur license in all countries and a number of countries 
  don’t permit the airborne use of APRS under any circumstances.  
@@ -61,9 +61,9 @@
  The hardware design & code for Habduino is released under a Creative Commons License 3.0 Attribution-ShareAlike License :
  See : http://creativecommons.org/licenses/by-sa/3.0/
  It is YOUR responsibility to ensure this kit is used safely please review the safety section.
-
+ 
  The latest code is available here : https://github.com/HABduino/HABduino
-
+ 
  
  */
 
@@ -73,8 +73,6 @@
 char callsign[9] = "CHANGEME";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
-
-//#define APRS // Uncomment to use APRS.
 
 #include <util/crc16.h>
 #include <avr/io.h>
@@ -109,8 +107,6 @@ uint16_t best_r = 0, best_n = 0;
 #define ONE_WIRE_BUS 5
 #define ONE_SECOND F_CPU / 1024 / 16
 
-
-
 struct frequency_rational
 {
   uint16_t n;
@@ -122,7 +118,6 @@ struct frequency_rational
 #define PREAMBLE_BYTES (50)
 #define REST_BYTES     (5)
 
-#define APRS_TX_INTERVAL 1  // APRS TX Interval in minutes
 #define PLAYBACK_RATE    (F_CPU / 256)
 #define SAMPLES_PER_BAUD (PLAYBACK_RATE / BAUD_RATE)
 #define PHASE_DELTA_1200 (((TABLE_SIZE * 1200L) << 7) / PLAYBACK_RATE)
@@ -191,7 +186,15 @@ void setup()  {
   blinkled(4);
   resetGPS();
   blinkled(3);
-  setPwmFrequency(LMT2_TXD, 1);
+
+#ifndef APRS
+  TCCR2B = TCCR2B & 0b11111000 | 1; // Sets fast PWM on pin 11
+#endif
+
+#ifdef APRS
+  ax25_init();
+#endif
+
   blinkled(2);
   setupGPS();
   blinkled(1);
@@ -292,66 +295,6 @@ void initialise_interrupt()
   TIMSK1 |= (1 << OCIE1A);
   sei();          // enable global interrupts
 }
-
-void setPwmFrequency(int pin, int divisor) {
-  byte mode;
-  if(pin == 5 || pin == 6 || pin == 9 || pin == 10) {
-    switch(divisor) {
-    case 1: 
-      mode = 0x01; 
-      break;
-    case 8: 
-      mode = 0x02; 
-      break;
-    case 64: 
-      mode = 0x03; 
-      break;
-    case 256: 
-      mode = 0x04; 
-      break;
-    case 1024: 
-      mode = 0x05; 
-      break;
-    default: 
-      return;
-    }
-    if(pin == 5 || pin == 6) {
-      TCCR0B = TCCR0B & 0b11111000 | mode;
-    } 
-    else {
-      TCCR1B = TCCR1B & 0b11111000 | mode;
-    }
-  } 
-  else if(pin == 3 || pin == 11) {
-    switch(divisor) {
-    case 1: 
-      mode = 0x01; 
-      break;
-    case 8: 
-      mode = 0x02; 
-      break;
-    case 32: 
-      mode = 0x03; 
-      break;
-    case 64: 
-      mode = 0x04; 
-      break;
-    case 128: 
-      mode = 0x05; 
-      break;
-    case 256: 
-      mode = 0x06; 
-      break;
-    case 1024: 
-      mode = 0x7; 
-      break;
-    default: 
-      return;
-    }
-    TCCR2B = TCCR2B & 0b11111000 | mode;
-  }
-}
-
 
 ISR(TIMER1_COMPA_vect)
 {
@@ -474,7 +417,13 @@ void rtty_txbit (int bit)
 {
   if (bit)
   {
-    analogWrite(LMT2_TXD, LMT2_OFFSET+(LMT2_SHIFT/16)); // High
+#ifdef APRS
+    analogWrite(LMT2_TXD, LMT2_OFFSET+((LMT2_SHIFT*1.3)/16)); // High
+#endif
+#ifndef APRS
+    analogWrite(LMT2_TXD, LMT2_OFFSET+((LMT2_SHIFT)/16)); // High
+#endif
+
   }
   else
   {
@@ -483,7 +432,7 @@ void rtty_txbit (int bit)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5 };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5         };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void sendUBX(uint8_t *MSG, uint8_t len) {
@@ -495,11 +444,11 @@ void sendUBX(uint8_t *MSG, uint8_t len) {
   }
 }
 void setupGPS() {
-  //Turning off all GPS NMEA strings apart on the uBlox module
+  // Turning off all GPS NMEA strings apart on the uBlox module
   // Taken from Project Swift (rather than the old way of sending ascii text)
   int gps_set_sucess=0;
   uint8_t setNMEAoff[] = {
-    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9 };
+    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9         };
   sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
   while(!gps_set_sucess)
   {
@@ -526,7 +475,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC         };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -542,7 +491,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76 };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76         };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -552,7 +501,7 @@ void setGPS_DynamicModel3()
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91 }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91         }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 
@@ -645,7 +594,7 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84 };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84         };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -726,7 +675,7 @@ void checkDynamicModel() {
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92 }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92         }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 void prepare_data() {
@@ -755,7 +704,7 @@ void prepare_data() {
   battvsmooth[0] = batteryadc_v;
   battvaverage = (battvsmooth[0]+battvsmooth[1]+ battvsmooth[2]+battvsmooth[3]+battvsmooth[4])/5;
 
-  
+
 }
 void gps_check_lock()
 {
@@ -764,7 +713,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                                                                        };
+    0x07, 0x16                                                                                                                                                                };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -801,7 +750,7 @@ void gps_get_position()
   Serial.flush();
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
-    0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03, 0x0A };
+    0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03, 0x0A         };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -852,7 +801,7 @@ void gps_get_time()
   Serial.flush();
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
-    0xB5, 0x62, 0x01, 0x21, 0x00, 0x00, 0x22, 0x67 };
+    0xB5, 0x62, 0x01, 0x21, 0x00, 0x00, 0x22, 0x67         };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -883,11 +832,9 @@ void gps_get_time()
 
 void send_APRS() {
   ax25_init();
-  digitalWrite(HX1_ENABLE, HIGH);
-  delay(1000);
   tx_aprs();
   delay(1000);
-  digitalWrite(HX1_ENABLE, LOW);
+  PORTD &= ~_BV(HX1_ENABLE); // Turn the HX1 Off
 }
 
 void ax25_init(void)
@@ -900,6 +847,7 @@ void ax25_init(void)
 
 void tx_aprs()
 {
+  PORTD |= _BV(HX1_ENABLE); // Same as digitalWrite(HX1_ENABLE, HIGH); but more efficient
   char slat[5];
   char slng[5];
   char stlm[9];
@@ -950,6 +898,7 @@ void tx_aprs()
 
 ISR(TIMER2_OVF_vect)
 {
+
   static uint16_t phase  = 0;
   static uint16_t step   = PHASE_DELTA_1200;
   static uint16_t sample = 0;
@@ -957,7 +906,6 @@ ISR(TIMER2_OVF_vect)
   static uint8_t byte;
   static uint8_t bit     = 7;
   static int8_t bc       = 0;
-
   /* Update the PWM output */
   OCR2B = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
   phase += step;
@@ -984,6 +932,7 @@ ISR(TIMER2_OVF_vect)
       {
         /* Disable radio and interrupt */
         //PORTA &= ~TXENABLE;
+
         TIMSK2 &= ~_BV(TOIE2);
 
         /* Prepare state for next run */
@@ -992,7 +941,6 @@ ISR(TIMER2_OVF_vect)
         rest  = PREAMBLE_BYTES + REST_BYTES;
         bit   = 7;
         bc    = 0;
-
         return;
       }
 
@@ -1218,6 +1166,10 @@ uint16_t crccat(char *msg)
 
   return(x);
 }
+
+
+
+
 
 
 
