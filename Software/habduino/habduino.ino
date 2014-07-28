@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- May 2014 Version 1.3.4
+ July 2014 Version 1.3.5
  
  Credits :
  
@@ -893,6 +893,27 @@ void tx_aprs()
     aprs_alt, stlm, comment,APRS_CALLSIGN, count, errorstatus,temperature1,temperature2
       );
   }
+  ax25_frame(
+    APRS_CALLSIGN, APRS_SSID,
+    "APRS", 0,
+    //0, 0, 0, 0,
+    "WIDE1", 1, "WIDE2",1,
+    //"WIDE2", 1,
+    "PARM.Vbatt,Temp,Sats,Status,Count"); 
+      ax25_frame(
+    APRS_CALLSIGN, APRS_SSID,
+    "APRS", 0,
+    //0, 0, 0, 0,
+    "WIDE1", 1, "WIDE2",1,
+    //"WIDE2", 1,
+    "UNIT.mV,C,,,"); 
+    ax25_frame(
+    APRS_CALLSIGN, APRS_SSID,
+    "APRS", 0,
+    //0, 0, 0, 0,
+    "WIDE1", 1, "WIDE2",1,
+    //"WIDE2", 1,
+    "EQNS.%i,%i,%i,%i,%i",battvaverage,temperature1,sats,errorstatus,count);     
   seq++;
 }
 
@@ -1043,17 +1064,17 @@ static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)
 
 void setLMT2Frequency(int32_t freq_target_hz)
 {
-  char lmt2command[12];
+  char lmt2command[14];
   struct frequency_rational r;
   r = frequency_magic(freq_target_hz+5000);
   LMT2_P0.begin(2400);
   wait(500);
   LMT2_P0.println("ENABLESERIALMODE");
   wait(50);
-  snprintf(lmt2command,12,"RVALUE %u", r.r); 
+  snprintf(lmt2command,14,"RVALUE %u", r.r); 
   LMT2_P0.println(lmt2command);
   wait(50);
-  snprintf(lmt2command,13,"SINGLE %u", r.n); 
+  snprintf(lmt2command,14,"SINGLE %u", r.n); 
   LMT2_P0.println(lmt2command);
   wait(50);
   LMT2_P0.println("#");
