@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- July 2014 Version 1.3.5
+ May 2014 Version 1.3.4
  
  Credits :
  
