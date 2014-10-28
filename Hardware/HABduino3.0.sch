@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.3">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -79,12 +79,20 @@
 <layer number="105" name="tPlate" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="106" name="bPlate" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="107" name="Crop" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="108" name="fp8" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="109" name="fp9" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="110" name="fp0" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="124" name="bTestmark" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="125" name="_tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="no" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="no"/>
 <layer number="201" name="201bmp" color="2" fill="1" visible="no" active="no"/>
 <layer number="202" name="202bmp" color="3" fill="1" visible="no" active="no"/>
@@ -1372,165 +1380,6 @@ This is a footprint for an edge mount RF antenna. Works pretty well with SMA typ
 <text x="4.064" y="51.562" size="1.016" layer="51" ratio="15">TX</text>
 <text x="4.064" y="54.102" size="1.016" layer="51" ratio="15">RX</text>
 <text x="49.149" y="32.258" size="1.016" layer="51" ratio="15" rot="R180">GND</text>
-</package>
-<package name="TACTILE-PTH">
-<description>&lt;b&gt;OMRON SWITCH&lt;/b&gt;</description>
-<wire x1="3.048" y1="1.016" x2="3.048" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="3.048" y1="2.54" x2="2.54" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="-3.048" x2="3.048" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="3.048" y1="-2.54" x2="3.048" y2="-1.016" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="3.048" x2="-3.048" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="-3.048" y1="2.54" x2="-3.048" y2="1.016" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-3.048" x2="-3.048" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="-3.048" y1="-2.54" x2="-3.048" y2="-1.016" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="-3.048" x2="2.159" y2="-3.048" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-3.048" x2="-2.159" y2="-3.048" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="3.048" x2="-2.159" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="3.048" x2="2.159" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.159" y1="3.048" x2="-2.159" y2="3.048" width="0.2032" layer="21"/>
-<wire x1="-2.159" y1="-3.048" x2="2.159" y2="-3.048" width="0.2032" layer="21"/>
-<wire x1="3.048" y1="0.998" x2="3.048" y2="-1.016" width="0.2032" layer="21"/>
-<wire x1="-3.048" y1="1.028" x2="-3.048" y2="-1.016" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="1.27" x2="-2.54" y2="0.508" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-0.508" x2="-2.54" y2="-1.27" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="0.508" x2="-2.159" y2="-0.381" width="0.2032" layer="51"/>
-<circle x="0" y="0" radius="1.778" width="0.2032" layer="21"/>
-<pad name="1" x="-3.2512" y="2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="2" x="3.2512" y="2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="3" x="-3.2512" y="-2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="4" x="3.2512" y="-2.2606" drill="1.016" diameter="1.8796"/>
-<text x="-2.54" y="3.81" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-</package>
-<package name="TACTILE_SWITCH_SMD">
-<wire x1="-1.54" y1="-2.54" x2="-2.54" y2="-1.54" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-1.24" x2="-2.54" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="1.54" x2="-1.54" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="-1.54" y1="2.54" x2="1.54" y2="2.54" width="0.2032" layer="21"/>
-<wire x1="1.54" y1="2.54" x2="2.54" y2="1.54" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="1.24" x2="2.54" y2="-1.24" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="-1.54" x2="1.54" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="1.54" y1="-2.54" x2="-1.54" y2="-2.54" width="0.2032" layer="21"/>
-<wire x1="1.905" y1="1.27" x2="1.905" y2="0.445" width="0.127" layer="51"/>
-<wire x1="1.905" y1="0.445" x2="2.16" y2="-0.01" width="0.127" layer="51"/>
-<wire x1="1.905" y1="-0.23" x2="1.905" y2="-1.115" width="0.127" layer="51"/>
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<smd name="1" x="-2.54" y="1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="2" x="2.54" y="1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="3" x="-2.54" y="-1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="4" x="2.54" y="-1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-</package>
-<package name="TACTILE_SWITCH_SMD-2">
-<wire x1="1.905" y1="1.27" x2="1.905" y2="0.445" width="0.127" layer="51"/>
-<wire x1="1.905" y1="0.445" x2="2.16" y2="-0.01" width="0.127" layer="51"/>
-<wire x1="1.905" y1="-0.23" x2="1.905" y2="-1.115" width="0.127" layer="51"/>
-<wire x1="-2.25" y1="2.25" x2="2.25" y2="2.25" width="0.127" layer="51"/>
-<wire x1="2.25" y1="2.25" x2="2.25" y2="-2.25" width="0.127" layer="51"/>
-<wire x1="2.25" y1="-2.25" x2="-2.25" y2="-2.25" width="0.127" layer="51"/>
-<wire x1="-2.25" y1="-2.25" x2="-2.25" y2="2.25" width="0.127" layer="51"/>
-<wire x1="-2.2" y1="0.8" x2="-2.2" y2="-0.8" width="0.2032" layer="21"/>
-<wire x1="1.3" y1="2.2" x2="-1.3" y2="2.2" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="-0.8" x2="2.2" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="-1.3" y1="-2.2" x2="1.3" y2="-2.2" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="0.8" x2="1.8" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="-0.8" x2="1.8" y2="-0.8" width="0.2032" layer="21"/>
-<wire x1="-1.8" y1="0.8" x2="-2.2" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="-1.8" y1="-0.8" x2="-2.2" y2="-0.8" width="0.2032" layer="21"/>
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<smd name="1" x="2.225" y="1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="2" x="2.225" y="-1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="3" x="-2.225" y="-1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="4" x="-2.225" y="1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-</package>
-<package name="TACTILE-PTH-12MM">
-<wire x1="5" y1="-1.3" x2="5" y2="-0.7" width="0.2032" layer="51"/>
-<wire x1="5" y1="-0.7" x2="4.5" y2="-0.2" width="0.2032" layer="51"/>
-<wire x1="5" y1="0.2" x2="5" y2="1" width="0.2032" layer="51"/>
-<wire x1="-6" y1="4" x2="-6" y2="5" width="0.2032" layer="21"/>
-<wire x1="-5" y1="6" x2="5" y2="6" width="0.2032" layer="21"/>
-<wire x1="6" y1="5" x2="6" y2="4" width="0.2032" layer="21"/>
-<wire x1="6" y1="1" x2="6" y2="-1" width="0.2032" layer="21"/>
-<wire x1="6" y1="-4" x2="6" y2="-5" width="0.2032" layer="21"/>
-<wire x1="5" y1="-6" x2="-5" y2="-6" width="0.2032" layer="21"/>
-<wire x1="-6" y1="-5" x2="-6" y2="-4" width="0.2032" layer="21"/>
-<wire x1="-6" y1="-1" x2="-6" y2="1" width="0.2032" layer="21"/>
-<wire x1="-6" y1="5" x2="-5" y2="6" width="0.2032" layer="21" curve="-90"/>
-<wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="21" curve="-90"/>
-<wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="21" curve="-90"/>
-<wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="21" curve="-90"/>
-<circle x="0" y="0" radius="3.5" width="0.2032" layer="21"/>
-<circle x="-4.5" y="4.5" radius="0.3" width="0.7" layer="21"/>
-<circle x="4.5" y="4.5" radius="0.3" width="0.7" layer="21"/>
-<circle x="4.5" y="-4.5" radius="0.3" width="0.7" layer="21"/>
-<circle x="-4.5" y="-4.5" radius="0.3" width="0.7" layer="21"/>
-<pad name="4" x="-6.25" y="2.5" drill="1.2" diameter="2.159"/>
-<pad name="2" x="-6.25" y="-2.5" drill="1.2" diameter="2.159"/>
-<pad name="1" x="6.25" y="-2.5" drill="1.2" diameter="2.159"/>
-<pad name="3" x="6.25" y="2.5" drill="1.2" diameter="2.159"/>
-</package>
-<package name="TACTILE-SWITCH-1101NE">
-<description>Sparkfun SKU# COM-08229</description>
-<wire x1="-3" y1="1.1" x2="-3" y2="-1.1" width="0.127" layer="51"/>
-<wire x1="3" y1="1.1" x2="3" y2="-1.1" width="0.127" layer="51"/>
-<wire x1="-2.75" y1="1.75" x2="-3" y2="1.5" width="0.127" layer="21" curve="90"/>
-<wire x1="-2.75" y1="1.75" x2="2.75" y2="1.75" width="0.127" layer="21"/>
-<wire x1="2.75" y1="1.75" x2="3" y2="1.5" width="0.127" layer="21" curve="-90"/>
-<wire x1="3" y1="-1.5" x2="2.65" y2="-1.75" width="0.127" layer="21" curve="-90"/>
-<wire x1="2.65" y1="-1.75" x2="-2.75" y2="-1.75" width="0.127" layer="21"/>
-<wire x1="-3" y1="-1.5" x2="-2.75" y2="-1.75" width="0.127" layer="21" curve="90"/>
-<wire x1="-3" y1="-1.5" x2="-3" y2="-1.1" width="0.127" layer="21"/>
-<wire x1="-3" y1="1.1" x2="-3" y2="1.5" width="0.127" layer="21"/>
-<wire x1="3" y1="1.1" x2="3" y2="1.5" width="0.127" layer="21"/>
-<wire x1="3" y1="-1.5" x2="3" y2="-1.1" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="0.75" x2="1.5" y2="0.75" width="0.127" layer="21"/>
-<wire x1="1.5" y1="-0.75" x2="-1.5" y2="-0.75" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="-0.75" x2="-1.5" y2="0.75" width="0.127" layer="21"/>
-<wire x1="1.5" y1="-0.75" x2="1.5" y2="0.75" width="0.127" layer="21"/>
-<wire x1="-2" y1="0" x2="-1" y2="0" width="0.127" layer="51"/>
-<wire x1="-1" y1="0" x2="0.1" y2="0.5" width="0.127" layer="51"/>
-<wire x1="0.3" y1="0" x2="2" y2="0" width="0.127" layer="51"/>
-<smd name="P$1" x="-3.15" y="0" dx="2.3" dy="1.6" layer="1" rot="R180"/>
-<smd name="P$2" x="3.15" y="0" dx="2.3" dy="1.6" layer="1" rot="R180"/>
-<text x="-3" y="2" size="0.762" layer="25">&gt;NAME</text>
-<text x="-3" y="-2.7" size="0.762" layer="27">&gt;VALUE</text>
-</package>
-<package name="REED_SWITCH_PTH">
-<wire x1="-6.985" y1="-0.635" x2="6.985" y2="-0.635" width="0.127" layer="21"/>
-<wire x1="-6.985" y1="-0.635" x2="-6.985" y2="0" width="0.127" layer="21"/>
-<wire x1="-6.985" y1="0" x2="-6.985" y2="0.635" width="0.127" layer="21"/>
-<wire x1="-6.985" y1="0.635" x2="6.985" y2="0.635" width="0.127" layer="21"/>
-<wire x1="6.985" y1="0.635" x2="6.985" y2="0" width="0.127" layer="21"/>
-<wire x1="6.985" y1="0" x2="6.985" y2="-0.635" width="0.127" layer="21"/>
-<wire x1="-6.985" y1="0" x2="-7.62" y2="0" width="0.127" layer="21"/>
-<wire x1="6.985" y1="0" x2="7.62" y2="0" width="0.127" layer="21"/>
-<pad name="P$1" x="-8.89" y="0" drill="1.016" diameter="1.8796"/>
-<pad name="P$2" x="8.89" y="0" drill="1.016" diameter="1.8796"/>
-</package>
-<package name="TACTILE_SWITCH_TALL">
-<wire x1="-3" y1="-3" x2="3" y2="-3" width="0.254" layer="21"/>
-<wire x1="3" y1="-3" x2="3" y2="3" width="0.254" layer="21"/>
-<wire x1="3" y1="3" x2="-3" y2="3" width="0.254" layer="21"/>
-<wire x1="-3" y1="3" x2="-3" y2="-3" width="0.254" layer="21"/>
-<circle x="0" y="0" radius="1.75" width="0.254" layer="21"/>
-<smd name="A1" x="-3.975" y="-2.25" dx="1.3" dy="1.55" layer="1" rot="R90"/>
-<smd name="A2" x="3.975" y="-2.25" dx="1.3" dy="1.55" layer="1" rot="R90"/>
-<smd name="B1" x="-3.975" y="2.25" dx="1.3" dy="1.55" layer="1" rot="R90"/>
-<smd name="B2" x="3.975" y="2.25" dx="1.3" dy="1.55" layer="1" rot="R90"/>
-</package>
-<package name="REED_SWITCH_PLASTIC">
-<wire x1="-7.5" y1="-1.65" x2="7.5" y2="-1.65" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="-1.65" x2="-7.5" y2="0" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="0" x2="-7.5" y2="1.65" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="1.65" x2="7.5" y2="1.65" width="0.127" layer="21"/>
-<wire x1="7.5" y1="1.65" x2="7.5" y2="0" width="0.127" layer="21"/>
-<wire x1="7.5" y1="0" x2="7.5" y2="-1.65" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="0" x2="-7.72" y2="0" width="0.127" layer="21"/>
-<wire x1="7.5" y1="0" x2="7.72" y2="0" width="0.127" layer="21"/>
-<pad name="P$1" x="-8.89" y="0" drill="1.016" diameter="1.8796"/>
-<pad name="P$2" x="8.89" y="0" drill="1.016" diameter="1.8796"/>
 </package>
 <package name="1X06">
 <wire x1="11.43" y1="0.635" x2="12.065" y2="1.27" width="0.2032" layer="21"/>
@@ -3424,16 +3273,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pin name="GND@0" x="-12.7" y="-17.78" visible="pin" length="short"/>
 <pin name="3.3V" x="-12.7" y="-7.62" visible="pin" length="short"/>
 </symbol>
-<symbol name="SWITCH-MOMENTARY-2">
-<wire x1="1.905" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="0" x2="1.905" y2="1.27" width="0.254" layer="94"/>
-<circle x="-2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
-<circle x="2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
-<text x="-2.54" y="2.54" size="1.778" layer="95">&gt;NAME</text>
-<text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="2"/>
-<pin name="2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
-</symbol>
 <symbol name="M06">
 <wire x1="1.27" y1="-7.62" x2="-5.08" y2="-7.62" width="0.4064" layer="94"/>
 <wire x1="-1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
@@ -4247,85 +4086,6 @@ End launch SMA connector. The paste layer has been removed so that the connector
 <connect gate="G$1" pin="RX" pad="RX"/>
 <connect gate="G$1" pin="TX" pad="TX"/>
 <connect gate="G$1" pin="VIN" pad="VIN"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="SWITCH-MOMENTARY-2" prefix="S">
-<gates>
-<gate name="G$1" symbol="SWITCH-MOMENTARY-2" x="0" y="0"/>
-</gates>
-<devices>
-<device name="PTH" package="TACTILE-PTH">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="SMD" package="TACTILE_SWITCH_SMD">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="SMD-2" package="TACTILE_SWITCH_SMD-2">
-<connects>
-<connect gate="G$1" pin="1" pad="2"/>
-<connect gate="G$1" pin="2" pad="1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="12MM" package="TACTILE-PTH-12MM">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="-SMD-1101NE" package="TACTILE-SWITCH-1101NE">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="PTH_REED" package="REED_SWITCH_PTH">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="" package="TACTILE_SWITCH_TALL">
-<connects>
-<connect gate="G$1" pin="1" pad="A2"/>
-<connect gate="G$1" pin="2" pad="B2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="PTH_REED2" package="REED_SWITCH_PLASTIC">
-<connects>
-<connect gate="G$1" pin="1" pad="P$1"/>
-<connect gate="G$1" pin="2" pad="P$2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -5237,8 +4997,8 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </library>
 <library name="ava">
 <packages>
-<package name="UBLOX_MAX-6">
-<description>uBlox MAX-6</description>
+<package name="UBLOX_MAX">
+<description>uBlox MAX</description>
 <smd name="11_RF_IN" x="-4.55" y="3.25" dx="1.8" dy="0.8" layer="1"/>
 <smd name="12_GND" x="-4.55" y="2.15" dx="1.8" dy="0.8" layer="1"/>
 <smd name="13_ANTON" x="-4.55" y="1.05" dx="1.8" dy="0.8" layer="1"/>
@@ -5263,9 +5023,8 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-4.65" y1="4.95" x2="5.05" y2="4.95" width="0.1" layer="21"/>
 <wire x1="5.05" y1="4.95" x2="5.05" y2="4.8" width="0.1" layer="21"/>
 <wire x1="-4.65" y1="4.95" x2="-4.65" y2="4.8" width="0.1" layer="21"/>
-<text x="3.2" y="-3.9" size="0.6096" layer="21" rot="R90">ublox</text>
-<circle x="2.85" y="-3.95" radius="0.4031125" width="0.127" layer="21"/>
-<text x="0.35" y="-1.4" size="0.6096" layer="21" rot="R90">MAX-6</text>
+<text x="3.35875" y="-3.10625" size="0.8128" layer="21" font="vector" ratio="15" rot="R90">ublox</text>
+<circle x="2.85" y="-3.95" radius="0.6" width="0" layer="21"/>
 </package>
 <package name="DS18B20_SOIC">
 <wire x1="2.362" y1="-1.803" x2="2.362" y2="1.803" width="0.1524" layer="21"/>
@@ -5282,33 +5041,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <text x="-1.27" y="0" size="0.4064" layer="25">&gt;NAME</text>
 <wire x1="-2.2225" y1="-1.11125" x2="2.38125" y2="-1.11125" width="0.127" layer="21"/>
 <wire x1="-2.2225" y1="-1.11125" x2="-2.38125" y2="-1.11125" width="0.127" layer="21"/>
-</package>
-<package name="RADIOMETRIX-LMT2">
-<wire x1="-16.51" y1="11.57" x2="16.49" y2="11.57" width="0.127" layer="21"/>
-<wire x1="16.49" y1="11.57" x2="16.49" y2="-11.43" width="0.127" layer="21"/>
-<wire x1="16.49" y1="-11.43" x2="-16.51" y2="-11.43" width="0.127" layer="21"/>
-<wire x1="-16.51" y1="-11.43" x2="-16.51" y2="11.57" width="0.127" layer="21"/>
-<pad name="N_TXE" x="-14.91" y="-4.85" drill="1.2"/>
-<pad name="P2" x="-12.37" y="-4.85" drill="1.2"/>
-<pad name="P1" x="-12.37" y="-7.39" drill="1.2"/>
-<pad name="GND" x="-14.91" y="-7.39" drill="1.2"/>
-<pad name="P0/PGM" x="-12.37" y="-9.93" drill="1.2"/>
-<pad name="P3" x="-12.37" y="-2.31" drill="1.2"/>
-<pad name="TXD" x="-14.91" y="-2.31" drill="1.2"/>
-<pad name="VCC" x="-14.91" y="-9.93" drill="1.2"/>
-<pad name="RFGND" x="10.49" y="-7.39" drill="1.2"/>
-<pad name="RF" x="7.95" y="-7.39" drill="1.2"/>
-<text x="-11.1125" y="-2.8575" size="1.27" layer="48" font="vector">P3</text>
-<text x="-11.1125" y="-5.3975" size="1.27" layer="48" font="vector">P2</text>
-<text x="-11.1125" y="-7.9375" size="1.27" layer="48" font="vector">P1</text>
-<text x="-11.1125" y="-10.4775" size="1.27" layer="48" font="vector">P0/PGM</text>
-<text x="-16.1925" y="-2.8575" size="1.27" layer="48" font="vector" align="bottom-right">TXD</text>
-<text x="-16.1925" y="-5.3975" size="1.27" layer="48" font="vector" align="bottom-right">N_TXE</text>
-<text x="-16.1925" y="-7.9375" size="1.27" layer="48" font="vector" align="bottom-right">GND</text>
-<text x="-16.1925" y="-10.4775" size="1.27" layer="48" font="vector" align="bottom-right">VCC</text>
-<text x="6.6675" y="-7.9375" size="1.27" layer="48" font="vector" align="bottom-right">RF</text>
-<text x="12.065" y="-7.9375" size="1.27" layer="48" font="vector">GND</text>
-<text x="-4.445" y="-0.9525" size="2.54" layer="48" font="vector">LMT2</text>
 </package>
 <package name="µSOP8">
 <wire x1="-1.4" y1="1.4" x2="1.4" y2="1.4" width="0.2032" layer="21"/>
@@ -5456,27 +5188,41 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pad name="P$2" x="2.07" y="7.34" drill="1.4"/>
 <wire x1="-3.81" y1="-5.33" x2="3.81" y2="-5.33" width="0.127" layer="21"/>
 </package>
+<package name="RADIOMETRIX-MTX2">
+<pad name="RF" x="-8.53" y="-4.75" drill="0.8"/>
+<pad name="RFGND" x="-6.53" y="-4.75" drill="0.8"/>
+<pad name="VCC" x="9.97" y="-5.25" drill="0.8"/>
+<pad name="EN" x="9.97" y="-3.25" drill="0.8"/>
+<pad name="TXD" x="9.97" y="-1.25" drill="0.8"/>
+<pad name="P1" x="9.97" y="0.75" drill="0.8"/>
+<pad name="P0" x="9.97" y="2.75" drill="0.8"/>
+<pad name="GND" x="9.97" y="4.75" drill="0.8"/>
+<wire x1="-11.43" y1="-6.35" x2="11.17" y2="-6.35" width="0.127" layer="21"/>
+<wire x1="-11.43" y1="5.95" x2="-11.43" y2="-6.35" width="0.127" layer="21"/>
+<wire x1="-11.43" y1="5.95" x2="11.17" y2="5.95" width="0.127" layer="21"/>
+<wire x1="11.17" y1="5.95" x2="11.17" y2="-6.35" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
-<symbol name="UBLOX_MAX-6">
-<pin name="10_GND" x="-22.86" y="15.24" visible="pin" length="middle"/>
+<symbol name="UBLOX_MAX">
+<pin name="10_GND" x="-22.86" y="15.24" visible="pin" length="middle" direction="pwr"/>
 <pin name="11_RF_IN" x="-22.86" y="10.16" visible="pin" length="middle"/>
-<pin name="12_GND" x="-22.86" y="5.08" visible="pin" length="middle"/>
+<pin name="12_GND" x="-22.86" y="5.08" visible="pin" length="middle" direction="pwr"/>
 <pin name="13_ANTON" x="-22.86" y="0" visible="pin" length="middle"/>
 <pin name="14_VCC_RF" x="-22.86" y="-5.08" visible="pin" length="middle"/>
 <pin name="15_RESERVED" x="-22.86" y="-10.16" visible="pin" length="middle"/>
 <pin name="16_SDA2" x="-22.86" y="-15.24" visible="pin" length="middle"/>
 <pin name="17_SCL2" x="-22.86" y="-20.32" visible="pin" length="middle"/>
 <pin name="18_RESERVED" x="-22.86" y="-25.4" visible="pin" length="middle"/>
-<pin name="9_V_RESET" x="22.86" y="15.24" visible="pin" length="middle" rot="R180"/>
-<pin name="8_VCC" x="22.86" y="10.16" visible="pin" length="middle" rot="R180"/>
-<pin name="7_VCC_IO" x="22.86" y="5.08" visible="pin" length="middle" rot="R180"/>
+<pin name="9_V_RESET" x="22.86" y="15.24" visible="pin" length="middle" direction="pwr" rot="R180"/>
+<pin name="8_VCC" x="22.86" y="10.16" visible="pin" length="middle" direction="pwr" rot="R180"/>
+<pin name="7_VCC_IO" x="22.86" y="5.08" visible="pin" length="middle" direction="pwr" rot="R180"/>
 <pin name="6_V_BCKP" x="22.86" y="0" visible="pin" length="middle" rot="R180"/>
 <pin name="5_EXTINT0" x="22.86" y="-5.08" visible="pin" length="middle" rot="R180"/>
 <pin name="4_TIMEPULSE" x="22.86" y="-10.16" visible="pin" length="middle" rot="R180"/>
 <pin name="3_RXD1" x="22.86" y="-15.24" visible="pin" length="middle" rot="R180"/>
 <pin name="2_TXD1" x="22.86" y="-20.32" visible="pin" length="middle" rot="R180"/>
-<pin name="1_GND" x="22.86" y="-25.4" visible="pin" length="middle" rot="R180"/>
+<pin name="1_GND" x="22.86" y="-25.4" visible="pin" length="middle" direction="pwr" rot="R180"/>
 <wire x1="-17.78" y1="17.78" x2="-17.78" y2="-27.94" width="0.254" layer="94"/>
 <wire x1="-17.78" y1="-27.94" x2="17.78" y2="-27.94" width="0.254" layer="94"/>
 <wire x1="17.78" y1="-27.94" x2="17.78" y2="17.78" width="0.254" layer="94"/>
@@ -5492,24 +5238,6 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pin name="GND" x="-2.54" y="-5.08" visible="pin" length="middle" direction="pwr" rot="R90"/>
 <pin name="DQ" x="0" y="-5.08" visible="pin" length="middle" rot="R90"/>
 <pin name="VCC" x="2.54" y="-5.08" visible="pin" length="middle" direction="pwr" rot="R90"/>
-</symbol>
-<symbol name="RADIOMETRIX-LMT2">
-<description>RADIOMETRIX LMT2</description>
-<wire x1="-27.94" y1="-5.08" x2="40.64" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="40.64" y1="-5.08" x2="40.64" y2="20.32" width="0.254" layer="94"/>
-<wire x1="40.64" y1="20.32" x2="-27.94" y2="20.32" width="0.254" layer="94"/>
-<wire x1="-27.94" y1="20.32" x2="-27.94" y2="-5.08" width="0.254" layer="94"/>
-<pin name="TXD" x="-22.86" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="N_TXD" x="-17.78" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="GND" x="-12.7" y="-10.16" visible="pin" length="middle" direction="pwr" rot="R90"/>
-<pin name="VCC" x="-7.62" y="-10.16" visible="pin" length="middle" direction="pwr" rot="R90"/>
-<pin name="P3" x="-2.54" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="P2" x="2.54" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="P1" x="7.62" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="P0/PGM" x="12.7" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="RF" x="30.48" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<pin name="RFGND" x="35.56" y="-10.16" visible="pin" length="middle" rot="R90"/>
-<text x="-25.4" y="15.24" size="1.778" layer="95">RADIOMETRIX LMT2</text>
 </symbol>
 <symbol name="LM3480IM3-3.3">
 <pin name="IN" x="-17.78" y="0" length="middle" direction="pwr"/>
@@ -5563,15 +5291,29 @@ Standard 1-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pin name="1" x="6.35" y="-1.27" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 <pin name="2" x="6.35" y="1.27" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 </symbol>
+<symbol name="RADIOMETRIX-MTX2">
+<wire x1="-30.48" y1="12.7" x2="33.02" y2="12.7" width="0.254" layer="94"/>
+<wire x1="33.02" y1="12.7" x2="33.02" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="33.02" y1="-10.16" x2="-30.48" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-30.48" y1="-10.16" x2="-30.48" y2="12.7" width="0.254" layer="94"/>
+<pin name="RFGND" x="-27.94" y="-15.24" length="middle" rot="R90"/>
+<pin name="RFOUT" x="-22.86" y="-15.24" length="middle" rot="R90"/>
+<pin name="EN" x="10.16" y="-15.24" length="middle" rot="R90"/>
+<pin name="VCC" x="15.24" y="-15.24" length="middle" rot="R90"/>
+<pin name="0V" x="20.32" y="-15.24" length="middle" rot="R90"/>
+<pin name="TXD" x="25.4" y="-15.24" length="middle" rot="R90"/>
+<pin name="P1" x="5.08" y="-15.24" length="middle" rot="R90"/>
+<pin name="P0" x="0" y="-15.24" length="middle" rot="R90"/>
+</symbol>
 </symbols>
 <devicesets>
-<deviceset name="UBLOX_MAX-6">
-<description>UBLOX MAX-6</description>
+<deviceset name="UBLOX_MAX">
+<description>UBLOX MAX</description>
 <gates>
-<gate name="G$1" symbol="UBLOX_MAX-6" x="-2.54" y="7.62"/>
+<gate name="G$1" symbol="UBLOX_MAX" x="-2.54" y="7.62"/>
 </gates>
 <devices>
-<device name="" package="UBLOX_MAX-6">
+<device name="" package="UBLOX_MAX">
 <connects>
 <connect gate="G$1" pin="10_GND" pad="10_GND"/>
 <connect gate="G$1" pin="11_RF_IN" pad="11_RF_IN"/>
@@ -5635,30 +5377,6 @@ Each DS18B20 has a unique 64-bit serial code, which allows multiple DS18B20s to 
 <connect gate="G$1" pin="DQ" pad="1"/>
 <connect gate="G$1" pin="GND" pad="4"/>
 <connect gate="G$1" pin="VCC" pad="8"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="RADIOMETRIX_LMT2">
-<gates>
-<gate name="G$1" symbol="RADIOMETRIX-LMT2" x="-2.54" y="-5.08"/>
-</gates>
-<devices>
-<device name="" package="RADIOMETRIX-LMT2">
-<connects>
-<connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="N_TXD" pad="N_TXE"/>
-<connect gate="G$1" pin="P0/PGM" pad="P0/PGM"/>
-<connect gate="G$1" pin="P1" pad="P1"/>
-<connect gate="G$1" pin="P2" pad="P2"/>
-<connect gate="G$1" pin="P3" pad="P3"/>
-<connect gate="G$1" pin="RF" pad="RF"/>
-<connect gate="G$1" pin="RFGND" pad="RFGND"/>
-<connect gate="G$1" pin="TXD" pad="TXD"/>
-<connect gate="G$1" pin="VCC" pad="VCC"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -5765,6 +5483,28 @@ Each DS18B20 has a unique 64-bit serial code, which allows multiple DS18B20s to 
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 <connect gate="G$1" pin="2" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="RADIOMETRIX-MTX2">
+<gates>
+<gate name="G$1" symbol="RADIOMETRIX-MTX2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="RADIOMETRIX-MTX2">
+<connects>
+<connect gate="G$1" pin="0V" pad="GND"/>
+<connect gate="G$1" pin="EN" pad="EN"/>
+<connect gate="G$1" pin="P0" pad="P0"/>
+<connect gate="G$1" pin="P1" pad="P1"/>
+<connect gate="G$1" pin="RFGND" pad="RFGND"/>
+<connect gate="G$1" pin="RFOUT" pad="RF"/>
+<connect gate="G$1" pin="TXD" pad="TXD"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -6092,7 +5832,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="U$1" library="ava" deviceset="UBLOX_MAX-6" device=""/>
+<part name="U$1" library="ava" deviceset="UBLOX_MAX" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND10" library="SparkFun" deviceset="GND" device=""/>
@@ -6102,7 +5842,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="FRAME1" library="SparkFun" deviceset="FRAME-A3" device=""/>
 <part name="L1" library="SparkFun" deviceset="INDUCTOR" device="0603" value="33µH"/>
 <part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10R"/>
-<part name="TEMPINT" library="ava" deviceset="DS1820" device="TO92" value="DS1821"/>
+<part name="TEMP" library="ava" deviceset="DS1820" device="SOIC" value="DS1821"/>
 <part name="GND22" library="SparkFun" deviceset="GND" device=""/>
 <part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4K7"/>
 <part name="LED1" library="SparkFun" deviceset="LED" device="0603" value="Green"/>
@@ -6111,10 +5851,8 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="LED3" library="SparkFun" deviceset="LED" device="0603" value="Red"/>
 <part name="GND17" library="SparkFun" deviceset="GND" device=""/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
-<part name="U$2" library="ava" deviceset="RADIOMETRIX_LMT2" device=""/>
 <part name="J$1" library="SparkFun" deviceset="SMA_EDGE" device=""/>
 <part name="J$2" library="SparkFun" deviceset="SMA_EDGE" device=""/>
-<part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="340K"/>
 <part name="U1" library="SparkFun" deviceset="ARDUINO_SHIELD" device="NO_SILK"/>
@@ -6124,8 +5862,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="3.3V1" library="SparkFun" deviceset="VCC" device=""/>
-<part name="S1" library="SparkFun" deviceset="SWITCH-MOMENTARY-2" device="" value="RESET"/>
-<part name="GND7" library="supply1" deviceset="GND" device=""/>
 <part name="U3" library="ava" deviceset="TXS0102DCTT" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="3.3V2" library="SparkFun" deviceset="VCC" device=""/>
@@ -6136,7 +5872,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="U$7" library="ava" deviceset="RADIOMETRIX-HX1" device=""/>
 <part name="J$3" library="SparkFun" deviceset="SMA_EDGE" device=""/>
 <part name="GND19" library="SparkFun" deviceset="GND" device=""/>
-<part name="RESET_LOCKOUT" library="SparkFun" deviceset="M02" device="PTH"/>
 <part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="20k"/>
 <part name="U$8" library="ava" deviceset="M02-NOSILK" device=""/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
@@ -6157,7 +5892,9 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <part name="U$9" library="ava" deviceset="TE_CONNECTIVITY_1-770966-0" device="">
 <attribute name="FARNELL" value="1098556"/>
 </part>
-<part name="U$10" library="StevesCoilCraft" deviceset="COILCRAFT_LPS4018" device="" value="2.2µH"/>
+<part name="LPS4018" library="StevesCoilCraft" deviceset="COILCRAFT_LPS4018" device="" value="2.2µH"/>
+<part name="U$4" library="ava" deviceset="RADIOMETRIX-MTX2" device=""/>
+<part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6177,7 +5914,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <instance part="FRAME1" gate="G$1" x="-66.04" y="-7.62"/>
 <instance part="L1" gate="G$1" x="213.36" y="63.5"/>
 <instance part="R4" gate="G$1" x="220.98" y="55.88"/>
-<instance part="TEMPINT" gate="G$1" x="12.7" y="59.69"/>
+<instance part="TEMP" gate="G$1" x="12.7" y="59.69"/>
 <instance part="GND22" gate="1" x="30.48" y="36.83"/>
 <instance part="R7" gate="G$1" x="39.37" y="48.26" rot="R270"/>
 <instance part="LED1" gate="G$1" x="162.56" y="88.9"/>
@@ -6186,12 +5923,10 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <instance part="LED3" gate="G$1" x="172.72" y="88.9"/>
 <instance part="GND17" gate="1" x="172.72" y="76.2"/>
 <instance part="R10" gate="G$1" x="172.72" y="96.52" rot="R90"/>
-<instance part="U$2" gate="G$1" x="-17.78" y="223.52"/>
-<instance part="J$1" gate="1" x="7.62" y="205.74"/>
+<instance part="J$1" gate="1" x="-40.64" y="203.2"/>
 <instance part="J$2" gate="1" x="200.66" y="71.12"/>
-<instance part="GND1" gate="1" x="-30.48" y="203.2"/>
-<instance part="GND3" gate="1" x="10.16" y="187.96"/>
-<instance part="R8" gate="G$1" x="-40.64" y="204.47" rot="R90"/>
+<instance part="GND3" gate="1" x="-45.72" y="185.42"/>
+<instance part="R8" gate="G$1" x="12.7" y="207.01" rot="R90"/>
 <instance part="U1" gate="G$1" x="102.87" y="181.61"/>
 <instance part="U2" gate="A" x="251.46" y="132.08"/>
 <instance part="C1" gate="G$1" x="220.98" y="116.84"/>
@@ -6199,8 +5934,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <instance part="GND2" gate="1" x="233.68" y="109.22"/>
 <instance part="GND5" gate="1" x="80.01" y="158.75"/>
 <instance part="3.3V1" gate="1" x="284.48" y="132.08"/>
-<instance part="S1" gate="G$1" x="55.88" y="181.61"/>
-<instance part="GND7" gate="1" x="46.99" y="176.53"/>
 <instance part="U3" gate="A" x="68.58" y="121.92"/>
 <instance part="GND4" gate="1" x="45.72" y="100.33"/>
 <instance part="3.3V2" gate="1" x="45.72" y="132.08"/>
@@ -6208,7 +5941,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <instance part="JP1" gate="G$1" x="111.76" y="53.34"/>
 <instance part="JP2" gate="G$1" x="111.76" y="73.66"/>
 <instance part="JP3" gate="G$1" x="0" y="63.5" rot="R270"/>
-<instance part="RESET_LOCKOUT" gate="G$1" x="64.77" y="189.23" rot="R270"/>
 <instance part="R3" gate="G$1" x="128.27" y="189.23"/>
 <instance part="U$8" gate="G$1" x="88.9" y="20.32"/>
 <instance part="C2" gate="G$1" x="287.02" y="71.12" rot="R90"/>
@@ -6225,10 +5957,12 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <instance part="GND18" gate="1" x="234.95" y="166.37"/>
 <instance part="C5" gate="G$1" x="255.27" y="184.15"/>
 <instance part="C6" gate="G$1" x="267.97" y="191.77"/>
-<instance part="U$9" gate="G$1" x="170.18" y="203.2">
-<attribute name="FARNELL" x="170.18" y="203.2" size="1.27" layer="96" display="off"/>
+<instance part="U$9" gate="G$1" x="166.37" y="205.74">
+<attribute name="FARNELL" x="166.37" y="205.74" size="1.27" layer="96" display="off"/>
 </instance>
-<instance part="U$10" gate="G$1" x="214.63" y="214.63"/>
+<instance part="LPS4018" gate="G$1" x="214.63" y="214.63"/>
+<instance part="U$4" gate="G$1" x="-12.7" y="231.14"/>
+<instance part="GND1" gate="1" x="7.62" y="198.12"/>
 </instances>
 <busses>
 </busses>
@@ -6285,7 +6019,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="10.16" y1="39.37" x2="-2.54" y2="39.37" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="39.37" x2="30.48" y2="39.37" width="0.1524" layer="91"/>
 <junction x="10.16" y="39.37"/>
-<pinref part="TEMPINT" gate="G$1" pin="GND"/>
+<pinref part="TEMP" gate="G$1" pin="GND"/>
 <pinref part="GND22" gate="1" pin="GND"/>
 <pinref part="JP3" gate="G$1" pin="1"/>
 <wire x1="-2.54" y1="55.88" x2="-2.54" y2="39.37" width="0.1524" layer="91"/>
@@ -6299,34 +6033,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="172.72" y1="78.74" x2="172.72" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="LED3" gate="G$1" pin="C"/>
 <pinref part="GND17" gate="1" pin="GND"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="GND"/>
-<wire x1="-30.48" y1="213.36" x2="-30.48" y2="205.74" width="0.1524" layer="91"/>
-<pinref part="GND1" gate="1" pin="GND"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="RFGND"/>
-<wire x1="17.78" y1="213.36" x2="17.78" y2="190.5" width="0.1524" layer="91"/>
-<wire x1="17.78" y1="190.5" x2="10.16" y2="190.5" width="0.1524" layer="91"/>
-<wire x1="10.16" y1="190.5" x2="2.54" y2="190.5" width="0.1524" layer="91"/>
-<wire x1="2.54" y1="190.5" x2="2.54" y2="193.04" width="0.1524" layer="91"/>
-<pinref part="J$1" gate="1" pin="GND@0"/>
-<wire x1="2.54" y1="193.04" x2="2.54" y2="195.58" width="0.1524" layer="91"/>
-<wire x1="2.54" y1="195.58" x2="2.54" y2="198.12" width="0.1524" layer="91"/>
-<wire x1="2.54" y1="198.12" x2="2.54" y2="200.66" width="0.1524" layer="91"/>
-<wire x1="2.54" y1="200.66" x2="5.08" y2="200.66" width="0.1524" layer="91"/>
-<pinref part="J$1" gate="1" pin="GND@1"/>
-<wire x1="5.08" y1="198.12" x2="2.54" y2="198.12" width="0.1524" layer="91"/>
-<pinref part="J$1" gate="1" pin="GND@2"/>
-<wire x1="5.08" y1="195.58" x2="2.54" y2="195.58" width="0.1524" layer="91"/>
-<pinref part="J$1" gate="1" pin="GND@3"/>
-<wire x1="5.08" y1="193.04" x2="2.54" y2="193.04" width="0.1524" layer="91"/>
-<junction x="2.54" y="198.12"/>
-<junction x="2.54" y="195.58"/>
-<junction x="2.54" y="193.04"/>
-<pinref part="GND3" gate="1" pin="GND"/>
-<junction x="10.16" y="190.5"/>
 </segment>
 <segment>
 <pinref part="U2" gate="A" pin="GND"/>
@@ -6352,12 +6058,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <junction x="80.01" y="163.83"/>
 <junction x="80.01" y="166.37"/>
 <pinref part="GND5" gate="1" pin="GND"/>
-</segment>
-<segment>
-<wire x1="46.99" y1="181.61" x2="46.99" y2="179.07" width="0.1524" layer="91"/>
-<pinref part="GND7" gate="1" pin="GND"/>
-<wire x1="46.99" y1="181.61" x2="50.8" y2="181.61" width="0.1524" layer="91"/>
-<pinref part="S1" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="U3" gate="A" pin="GND"/>
@@ -6399,11 +6099,11 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="191.77" y1="173.99" x2="201.93" y2="173.99" width="0.1524" layer="91"/>
 <wire x1="191.77" y1="168.91" x2="191.77" y2="173.99" width="0.1524" layer="91"/>
 <junction x="191.77" y="173.99"/>
-<pinref part="U$9" gate="G$1" pin="1"/>
-<wire x1="176.53" y1="201.93" x2="177.8" y2="201.93" width="0.1524" layer="91"/>
-<wire x1="177.8" y1="201.93" x2="177.8" y2="173.99" width="0.1524" layer="91"/>
+<wire x1="177.8" y1="207.01" x2="177.8" y2="173.99" width="0.1524" layer="91"/>
 <wire x1="177.8" y1="173.99" x2="181.61" y2="173.99" width="0.1524" layer="91"/>
 <junction x="181.61" y="173.99"/>
+<pinref part="U$9" gate="G$1" pin="2"/>
+<wire x1="177.8" y1="207.01" x2="172.72" y2="207.01" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC2" gate="G$1" pin="PGND"/>
@@ -6433,6 +6133,34 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="267.97" y1="189.23" x2="267.97" y2="173.99" width="0.1524" layer="91"/>
 <wire x1="267.97" y1="173.99" x2="260.35" y2="173.99" width="0.1524" layer="91"/>
 <junction x="260.35" y="173.99"/>
+</segment>
+<segment>
+<wire x1="-45.72" y1="187.96" x2="-45.72" y2="190.5" width="0.1524" layer="91"/>
+<pinref part="J$1" gate="1" pin="GND@0"/>
+<wire x1="-45.72" y1="190.5" x2="-45.72" y2="193.04" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="193.04" x2="-45.72" y2="195.58" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="195.58" x2="-45.72" y2="198.12" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="198.12" x2="-43.18" y2="198.12" width="0.1524" layer="91"/>
+<pinref part="J$1" gate="1" pin="GND@1"/>
+<wire x1="-43.18" y1="195.58" x2="-45.72" y2="195.58" width="0.1524" layer="91"/>
+<pinref part="J$1" gate="1" pin="GND@2"/>
+<wire x1="-43.18" y1="193.04" x2="-45.72" y2="193.04" width="0.1524" layer="91"/>
+<pinref part="J$1" gate="1" pin="GND@3"/>
+<wire x1="-43.18" y1="190.5" x2="-45.72" y2="190.5" width="0.1524" layer="91"/>
+<junction x="-45.72" y="195.58"/>
+<junction x="-45.72" y="193.04"/>
+<junction x="-45.72" y="190.5"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+<pinref part="U$4" gate="G$1" pin="RFGND"/>
+<wire x1="-40.64" y1="215.9" x2="-40.64" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="-40.64" y1="210.82" x2="-45.72" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="210.82" x2="-45.72" y2="198.12" width="0.1524" layer="91"/>
+<junction x="-45.72" y="198.12"/>
+</segment>
+<segment>
+<pinref part="U$4" gate="G$1" pin="0V"/>
+<wire x1="7.62" y1="215.9" x2="7.62" y2="200.66" width="0.1524" layer="91"/>
+<pinref part="GND1" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -6516,21 +6244,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <pinref part="R10" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$3" class="0">
-<segment>
-<pinref part="J$1" gate="1" pin="SIGNAL"/>
-<pinref part="U$2" gate="G$1" pin="RF"/>
-<wire x1="12.7" y1="205.74" x2="12.7" y2="213.36" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="_LMT2TXD" class="0">
-<segment>
-<pinref part="U$2" gate="G$1" pin="TXD"/>
-<wire x1="-40.64" y1="213.36" x2="-40.64" y2="209.55" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="2"/>
-</segment>
-</net>
-<net name="11/LMT2_TXD" class="0">
+<net name="11/MTX2_TXD" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="*D11"/>
 <wire x1="115.57" y1="168.91" x2="123.19" y2="168.91" width="0.1524" layer="91"/>
@@ -6538,8 +6252,8 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 </segment>
 <segment>
 <pinref part="R8" gate="G$1" pin="1"/>
-<wire x1="-40.64" y1="199.39" x2="-40.64" y2="196.85" width="0.1524" layer="91"/>
-<label x="-40.64" y="196.85" size="1.27" layer="95" rot="R270" xref="yes"/>
+<wire x1="12.7" y1="201.93" x2="12.7" y2="199.39" width="0.1524" layer="91"/>
+<label x="12.7" y="199.39" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="V5V" class="0">
@@ -6558,11 +6272,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <label x="80.01" y="176.53" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$2" gate="G$1" pin="VCC"/>
-<wire x1="-25.4" y1="213.36" x2="-25.4" y2="196.85" width="0.1524" layer="91"/>
-<label x="-25.4" y="196.85" size="1.27" layer="95" rot="R270" xref="yes"/>
-</segment>
-<segment>
 <pinref part="U3" gate="A" pin="VCCB"/>
 <wire x1="50.8" y1="121.92" x2="38.1" y2="121.92" width="0.1524" layer="91"/>
 <label x="38.1" y="121.92" size="1.27" layer="95" rot="R180" xref="yes"/>
@@ -6575,7 +6284,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="15.24" y1="54.61" x2="15.24" y2="46.99" width="0.1524" layer="91"/>
 <junction x="15.24" y="46.99"/>
 <junction x="2.54" y="46.99"/>
-<pinref part="TEMPINT" gate="G$1" pin="VCC"/>
+<pinref part="TEMP" gate="G$1" pin="VCC"/>
 <label x="24.13" y="46.99" size="1.27" layer="95" rot="R90" xref="yes"/>
 <pinref part="JP3" gate="G$1" pin="3"/>
 </segment>
@@ -6604,6 +6313,11 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="227.33" y1="189.23" x2="242.57" y2="189.23" width="0.1524" layer="91"/>
 <wire x1="242.57" y1="189.23" x2="242.57" y2="199.39" width="0.1524" layer="91"/>
 <junction x="242.57" y="199.39"/>
+</segment>
+<segment>
+<pinref part="U$4" gate="G$1" pin="VCC"/>
+<wire x1="2.54" y1="215.9" x2="2.54" y2="200.66" width="0.1524" layer="91"/>
+<label x="2.54" y="200.66" size="1.27" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="TX3V3" class="0">
@@ -6669,36 +6383,17 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <junction x="40.64" y="116.84"/>
 </segment>
 </net>
-<net name="7/LMT2_P0" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="D7"/>
-<wire x1="115.57" y1="179.07" x2="123.19" y2="179.07" width="0.1524" layer="91"/>
-<label x="123.19" y="179.07" size="1.27" layer="95" xref="yes"/>
-</segment>
+<net name="7/MTX2_EN" class="0">
 <segment>
 <wire x1="-22.86" y1="129.54" x2="-16.51" y2="129.54" width="0.1524" layer="91"/>
 <label x="-16.51" y="129.54" size="1.27" layer="95" xref="yes"/>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="127" x2="-22.86" y2="129.54" width="0.1524" layer="91"/>
 </segment>
-</net>
-<net name="8/LMT2_N_TXD" class="0">
 <segment>
-<pinref part="U$2" gate="G$1" pin="N_TXD"/>
-<wire x1="-35.56" y1="213.36" x2="-35.56" y2="196.85" width="0.1524" layer="91"/>
-<label x="-35.56" y="196.85" size="1.27" layer="95" rot="R270" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="D8"/>
-<wire x1="115.57" y1="176.53" x2="123.19" y2="176.53" width="0.1524" layer="91"/>
-<label x="123.19" y="176.53" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="9/NC" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="*D9"/>
-<wire x1="115.57" y1="173.99" x2="123.19" y2="173.99" width="0.1524" layer="91"/>
-<label x="123.19" y="173.99" size="1.27" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="D7"/>
+<wire x1="115.57" y1="179.07" x2="123.19" y2="179.07" width="0.1524" layer="91"/>
+<label x="123.19" y="179.07" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="5/TEMPSENSORS" class="0">
@@ -6709,7 +6404,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="12.7" y1="54.61" x2="12.7" y2="43.18" width="0.1524" layer="91"/>
 <junction x="12.7" y="43.18"/>
 <junction x="39.37" y="43.18"/>
-<pinref part="TEMPINT" gate="G$1" pin="DQ"/>
+<pinref part="TEMP" gate="G$1" pin="DQ"/>
 <pinref part="R7" gate="G$1" pin="2"/>
 <label x="44.45" y="43.18" size="1.27" layer="95" xref="yes"/>
 <pinref part="JP3" gate="G$1" pin="2"/>
@@ -6793,27 +6488,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <label x="80.01" y="173.99" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="RESET_LOCKOUT" gate="G$1" pin="1"/>
-<pinref part="S1" gate="G$1" pin="2"/>
-<wire x1="60.96" y1="181.61" x2="64.77" y2="181.61" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<pinref part="RESET_LOCKOUT" gate="G$1" pin="2"/>
-<pinref part="U1" gate="G$1" pin="RES"/>
-<wire x1="67.31" y1="181.61" x2="90.17" y2="181.61" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="6/HX1EN" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="*D6"/>
-<wire x1="115.57" y1="181.61" x2="123.19" y2="181.61" width="0.1524" layer="91"/>
-<label x="123.19" y="181.61" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="*D3"/>
@@ -6852,22 +6526,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <pinref part="JP4" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="LMT2_P0" class="0">
-<segment>
-<pinref part="U$2" gate="G$1" pin="P0/PGM"/>
-<wire x1="-5.08" y1="213.36" x2="-5.08" y2="196.85" width="0.1524" layer="91"/>
-<label x="-5.08" y="196.85" size="1.27" layer="95" rot="R270" xref="yes"/>
-</segment>
-<segment>
-<wire x1="-22.86" y1="114.3" x2="-16.51" y2="114.3" width="0.1524" layer="91"/>
-<label x="-16.51" y="114.3" size="1.27" layer="95" xref="yes"/>
-<pinref part="R5" gate="G$1" pin="1"/>
-<pinref part="R12" gate="G$1" pin="2"/>
-<wire x1="-22.86" y1="116.84" x2="-22.86" y2="114.3" width="0.1524" layer="91"/>
-<junction x="-22.86" y="114.3"/>
-<wire x1="-22.86" y1="114.3" x2="-22.86" y2="111.76" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="A0/VBATT" class="1">
 <segment>
 <pinref part="IC2" gate="G$1" pin="VIN"/>
@@ -6889,11 +6547,11 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <junction x="194.31" y="194.31"/>
 <junction x="194.31" y="199.39"/>
 <label x="181.61" y="204.47" size="1.778" layer="95" rot="R90" xref="yes"/>
-<pinref part="U$9" gate="G$1" pin="2"/>
-<wire x1="176.53" y1="204.47" x2="181.61" y2="204.47" width="0.1524" layer="91"/>
-<junction x="181.61" y="204.47"/>
-<pinref part="U$10" gate="G$1" pin="P$1"/>
+<pinref part="LPS4018" gate="G$1" pin="P$1"/>
 <wire x1="194.31" y1="214.63" x2="199.39" y2="214.63" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="1"/>
+<wire x1="172.72" y1="204.47" x2="181.61" y2="204.47" width="0.1524" layer="91"/>
+<junction x="181.61" y="204.47"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="A0"/>
@@ -6911,7 +6569,7 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <pinref part="IC2" gate="G$1" pin="L"/>
 <wire x1="227.33" y1="204.47" x2="234.95" y2="204.47" width="0.1524" layer="91"/>
 <wire x1="234.95" y1="204.47" x2="234.95" y2="214.63" width="0.1524" layer="91"/>
-<pinref part="U$10" gate="G$1" pin="P$2"/>
+<pinref part="LPS4018" gate="G$1" pin="P$2"/>
 <wire x1="229.87" y1="214.63" x2="234.95" y2="214.63" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -6921,13 +6579,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="227.33" y1="194.31" x2="255.27" y2="194.31" width="0.1524" layer="91"/>
 <wire x1="255.27" y1="194.31" x2="255.27" y2="189.23" width="0.1524" layer="91"/>
 <pinref part="C5" gate="G$1" pin="1"/>
-</segment>
-</net>
-<net name="10/" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="*D10"/>
-<wire x1="115.57" y1="171.45" x2="123.19" y2="171.45" width="0.1524" layer="91"/>
-<label x="123.19" y="171.45" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="13/LED_OK" class="0">
@@ -6940,6 +6591,43 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <wire x1="162.56" y1="101.6" x2="162.56" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="R9" gate="G$1" pin="2"/>
 <label x="162.56" y="106.68" size="1.27" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="U$4" gate="G$1" pin="RFOUT"/>
+<pinref part="J$1" gate="1" pin="SIGNAL"/>
+<wire x1="-35.56" y1="215.9" x2="-35.56" y2="203.2" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="U$4" gate="G$1" pin="TXD"/>
+<wire x1="12.7" y1="215.9" x2="12.7" y2="212.09" width="0.1524" layer="91"/>
+<pinref part="R8" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="MTX2EN" class="0">
+<segment>
+<pinref part="U$4" gate="G$1" pin="EN"/>
+<wire x1="-2.54" y1="215.9" x2="-2.54" y2="200.66" width="0.1524" layer="91"/>
+<label x="-2.54" y="200.66" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+<segment>
+<wire x1="-22.86" y1="114.3" x2="-16.51" y2="114.3" width="0.1524" layer="91"/>
+<label x="-16.51" y="114.3" size="1.27" layer="95" xref="yes"/>
+<pinref part="R5" gate="G$1" pin="1"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<wire x1="-22.86" y1="116.84" x2="-22.86" y2="114.3" width="0.1524" layer="91"/>
+<junction x="-22.86" y="114.3"/>
+<wire x1="-22.86" y1="114.3" x2="-22.86" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="6/HX1EN" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="*D6"/>
+<wire x1="115.57" y1="181.61" x2="123.19" y2="181.61" width="0.1524" layer="91"/>
+<label x="123.19" y="181.61" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -7019,8 +6707,13 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 </sheet>
 </sheets>
 <errors>
-<approved hash="104,1,15.24,54.61,TEMPINT,VCC,V5V,,,"/>
-<approved hash="104,1,-25.4,213.36,U$2,VCC,V5V,,,"/>
+<approved hash="104,1,228.6,76.2,U$1,10_GND,GND,,,"/>
+<approved hash="104,1,228.6,66.04,U$1,12_GND,GND,,,"/>
+<approved hash="104,1,274.32,76.2,U$1,9_V_RESET,VCC,,,"/>
+<approved hash="104,1,274.32,71.12,U$1,8_VCC,VCC,,,"/>
+<approved hash="104,1,274.32,66.04,U$1,7_VCC_IO,VCC,,,"/>
+<approved hash="104,1,274.32,35.56,U$1,1_GND,GND,,,"/>
+<approved hash="104,1,15.24,54.61,TEMP,VCC,V5V,,,"/>
 <approved hash="104,1,233.68,132.08,U2,IN,V5V,,,"/>
 <approved hash="104,1,50.8,124.46,U3,VCCA,VCC,,,"/>
 <approved hash="104,1,50.8,121.92,U3,VCCB,V5V,,,"/>
@@ -7028,8 +6721,6 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <approved hash="104,1,227.33,179.07,IC2,PP,GND,,,"/>
 <approved hash="104,1,227.33,176.53,IC2,PP,GND,,,"/>
 <approved hash="104,1,227.33,173.99,IC2,PP,GND,,,"/>
-<approved hash="106,1,115.57,173.99,9/NC,,,,,"/>
-<approved hash="106,1,115.57,171.45,10/,,,,,"/>
 <approved hash="208,1,274.32,83.82,VCC,sup,,,,"/>
 <approved hash="208,1,269.24,132.08,VCC,out,,,,"/>
 <approved hash="208,1,284.48,132.08,VCC,sup,,,,"/>
@@ -7037,10 +6728,8 @@ Source: http://focus.ti.com/lit/ds/symlink/tps61200.pdf</description>
 <approved hash="115,1,113.623,56.0747,JP1,,,,,"/>
 <approved hash="115,1,113.623,76.3947,JP2,,,,,"/>
 <approved hash="115,1,1.46473,59.0973,JP3,,,,,"/>
-<approved hash="115,1,67.5047,180.666,RESET_LOCKOUT,,,,,"/>
 <approved hash="115,1,285.75,72.7913,C2,,,,,"/>
 <approved hash="115,1,92.0327,35.7547,JP4,,,,,"/>
-<approved hash="115,1,214.63,215.024,U$10,,,,,"/>
 </errors>
 </schematic>
 </drawing>
