@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- November 2014 Version 3.0.0
+ November 2014 Version 3.0.1
  
  This is for the Version 3 Habduino Hardware with the MTX2 Radio.
  
@@ -16,14 +16,8 @@
  Suggestion to lock variables when making the telemetry string & Compare match register calculation from Phil Heron.
  APRS Code mainly by Phil Heron MI0VIM
  
- GPS Code from jonsowman and Joey flight computer CUSF
+ GPS Code modified from jonsowman and Joey flight computer CUSF
  https://github.com/cuspaceflight/joey-m/tree/master/firmware
- 
- LMT2 N&R Calculation code Daniel Richman & Adam Greig :
- From python fractions.Fraction.limit_denominator
- Originally contributed by Sjoerd Mullender.
- Significantly modified by Jeffrey Yasskin <jyasskin at gmail.com>.
- Ported to C by Daniel Richman 
  
  Thanks to :
  
@@ -55,7 +49,7 @@
  If you decide to use this product under a balloon it’s your responsibility to ensure you comply with the 
  local legislation and laws regarding meteorological balloon launching and radio transmission in the air. 
  
- The Radiometrix LMT2 434Mhz is NOT license exempt in the United States of America and does need a radio
+ The Radiometrix MTX2 434Mhz is NOT license exempt in the United States of America and does need a radio
  amateur license.  Use of APRS requires a radio amateur license in all countries and a number of countries 
  don’t permit the airborne use of APRS under any circumstances.  
  The Habduino cannot do APRS without an addon Radiometrix HX1 module.
@@ -71,7 +65,7 @@
 
 /* BITS YOU WANT TO AMEND */
 
-#define LMT2_FREQ 434650000     // Transmission frequency e.g 434650000 = 434.650Mhz
+#define MTX2_FREQ 434.485 // format 434.XXX  
 char callsign[9] = "CHANGEME";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
@@ -94,10 +88,10 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define LED_WARN 12
 #define LED_OK 13
 #define BATTERY_ADC A0
-#define LMT2_SHIFT 500        
-#define LMT2_OFFSET 0          // 0-100 Slightly adjusts the frequency by increasing the PWM 
-#define LMT2_TXD 11
-#define LMT2_ENABLE 8
+#define MTX2_SHIFT 425        
+#define MTX2_OFFSET 0          // 0-100 Slightly adjusts the frequency by increasing the PWM 
+#define MTX2_TXD 11
+#define MTX2_ENABLE 7
 
 
 #define max_denominator 1300
@@ -126,7 +120,7 @@ struct frequency_rational
 #define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
 
-SoftwareSerial LMT2_P0(12, 7); // RX, TX
+SoftwareSerial MTX2_EN(12, MTX2_ENABLE); // RX, TX
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
@@ -172,17 +166,17 @@ char comment[3]={
 
 
 void setup()  { 
-  pinMode(LMT2_TXD, OUTPUT);
+  pinMode(MTX2_TXD, OUTPUT);
   pinMode(LED_WARN, OUTPUT);
   pinMode(HX1_ENABLE, OUTPUT);
   pinMode(LED_OK,OUTPUT);
-  pinMode(LMT2_ENABLE, OUTPUT);
+  pinMode(MTX2_ENABLE, OUTPUT);
   pinMode(GPS_ON, OUTPUT);
   pinMode(BATTERY_ADC, INPUT);
   blinkled(6);
-  setLMT2Frequency(LMT2_FREQ);
+  setMTX2Frequency();
   Serial.begin(9600);
-  digitalWrite(LMT2_ENABLE,LOW);
+  digitalWrite(MTX2_ENABLE,HIGH);
   blinkled(5);
   digitalWrite(GPS_ON,HIGH);
   blinkled(4);
@@ -420,16 +414,16 @@ void rtty_txbit (int bit)
   if (bit)
   {
 #ifdef APRS
-    analogWrite(LMT2_TXD, LMT2_OFFSET+((LMT2_SHIFT*1.3)/16)); // High
+    analogWrite(MTX2_TXD, MTX2_OFFSET+((MTX2_SHIFT*2)/16)); // High
 #endif
 #ifndef APRS
-    analogWrite(LMT2_TXD, LMT2_OFFSET+((LMT2_SHIFT)/16)); // High
+    analogWrite(MTX2_TXD, MTX2_OFFSET+((MTX2_SHIFT*1.8)/16)); // High
 #endif
 
   }
   else
   {
-    analogWrite(LMT2_TXD, LMT2_OFFSET); // Low
+    analogWrite(MTX2_TXD, MTX2_OFFSET); // Low
   }
 }
 void resetGPS() {
@@ -1043,25 +1037,22 @@ static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)
   return(s);
 }
 
-void setLMT2Frequency(int32_t freq_target_hz)
+void setMTX2Frequency()
 {
-  char lmt2command[12];
-  struct frequency_rational r;
-  r = frequency_magic(freq_target_hz+5000);
-  LMT2_P0.begin(2400);
-  wait(500);
-  LMT2_P0.println("ENABLESERIALMODE");
-  wait(50);
-  snprintf(lmt2command,12,"RVALUE %u", r.r); 
-  LMT2_P0.println(lmt2command);
-  wait(50);
-  snprintf(lmt2command,13,"SINGLE %u", r.n); 
-  LMT2_P0.println(lmt2command);
-  wait(50);
-  LMT2_P0.println("#");
-  wait(50);
-  LMT2_P0.end();
-}    
+  float _mtx2comp;
+  int _mtx2int;
+  long _mtx2fractional;
+  char _mtx2command[17];
+  MTX2_EN.begin(9600);
+  _mtx2comp=(MTX2_FREQ+0.0015)/6.5;
+  _mtx2int=_mtx2comp;
+  _mtx2fractional=float(((_mtx2comp-_mtx2int)+1)*524288);
+  snprintf(_mtx2command,17,"@PRG_%02X%06lX\r",_mtx2int-1, _mtx2fractional);
+  delay(100);
+  MTX2_EN.print(_mtx2command);
+  delay(50);
+  MTX2_EN.end();
+}  
 
 static inline uint32_t hcf(uint32_t a, uint32_t b)
 {
