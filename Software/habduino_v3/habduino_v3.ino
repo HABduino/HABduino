@@ -3,9 +3,9 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- May 2014 Version 1.3.4
+ November 2014 Version 3.0.0
  
- This version is for the version 1 and version 2 Habduino PCB's with an LMT2 Radio. 
+ This is for the Version 3 Habduino Hardware with the MTX2 Radio.
  
  Credits :
  
