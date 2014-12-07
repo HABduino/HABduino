@@ -17,12 +17,12 @@
 /* You should have received a copy of the GNU General Public License     */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#define APRS // Uncomment to use APRS.
+//#define APRS // Uncomment to use APRS.
 
 #ifndef __AX25MODEM_H
 #define __AX25MODEM_H
 #define APRS_TX_INTERVAL 1  // APRS TX Interval in minutes
-#define APRS_CALLSIGN "M0UPU"
+#define APRS_CALLSIGN "NULL"
 #define APRS_SSID     (11)
 
 extern void ax25_init(void);

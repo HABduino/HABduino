@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- November 2014 Version 3.0.2
+ November 2014 Version 3.0.3
  
  This is for the Version 3 Habduino Hardware with the MTX2 Radio.
  
@@ -150,7 +150,7 @@ int GPSerror = 0,navmode = 0,psm_status = 0,lat_int=0,lon_int=0,tempsensors,temp
 int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0 ,tslf=0;
 unsigned long currentMillis;
 long previousMillis = 0;
-int batteryadc_v,battvaverage=0; 
+int batteryadc_v,battvaverage=0,aprstxstatus=0; 
 int32_t battvsmooth[5] ;
 int aprs_tx_status = 0, aprs_attempts = 0;
 unsigned long startTime;
@@ -406,12 +406,12 @@ void rtty_txbit (int bit)
 {
   if (bit)
   {
-//#ifdef APRS
+    //#ifdef APRS
     analogWrite(MTX2_TXD, MTX2_OFFSET+((MTX2_SHIFT*1.8)/16)); // High
-//#endif
-//#ifndef APRS
-//    analogWrite(MTX2_TXD, MTX2_OFFSET+((MTX2_SHIFT*1.8)/16)); // High
-//#endif
+    //#endif
+    //#ifndef APRS
+    //    analogWrite(MTX2_TXD, MTX2_OFFSET+((MTX2_SHIFT*1.8)/16)); // High
+    //#endif
 
   }
   else
@@ -421,7 +421,7 @@ void rtty_txbit (int bit)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5         };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5           };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void sendUBX(uint8_t *MSG, uint8_t len) {
@@ -437,7 +437,7 @@ void setupGPS() {
   // Taken from Project Swift (rather than the old way of sending ascii text)
   int gps_set_sucess=0;
   uint8_t setNMEAoff[] = {
-    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9         };
+    0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9           };
   sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
   while(!gps_set_sucess)
   {
@@ -465,7 +465,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC         };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC           };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -474,18 +474,18 @@ void setGPS_DynamicModel6()
 }
 void setGPS_GNSS()
 {
-	// Sets CFG-GNSS to disable everything other than GPS GNSS
-	// solution. Failure to do this means GPS power saving 
-	// doesn't work. Not needed for MAX7, needed for MAX8's
+  // Sets CFG-GNSS to disable everything other than GPS GNSS
+  // solution. Failure to do this means GPS power saving 
+  // doesn't work. Not needed for MAX7, needed for MAX8's
   int gps_set_sucess=0;
   uint8_t setgnss[] = {
-	0xB5, 0x62, 0x06, 0x3E, 0x2C, 0x00, 0x00, 0x00,
-	0x20, 0x05, 0x00, 0x08, 0x10, 0x00, 0x01, 0x00,
-	0x01, 0x01, 0x01, 0x01, 0x03, 0x00, 0x00, 0x00,
-	0x01, 0x01, 0x03, 0x08, 0x10, 0x00, 0x00, 0x00,
-	0x01, 0x01, 0x05, 0x00, 0x03, 0x00, 0x00, 0x00,
-	0x01, 0x01, 0x06, 0x08, 0x0E, 0x00, 0x00, 0x00,
-	0x01, 0x01, 0xFC, 0x11 };
+    0xB5, 0x62, 0x06, 0x3E, 0x2C, 0x00, 0x00, 0x00,
+    0x20, 0x05, 0x00, 0x08, 0x10, 0x00, 0x01, 0x00,
+    0x01, 0x01, 0x01, 0x01, 0x03, 0x00, 0x00, 0x00,
+    0x01, 0x01, 0x03, 0x08, 0x10, 0x00, 0x00, 0x00,
+    0x01, 0x01, 0x05, 0x00, 0x03, 0x00, 0x00, 0x00,
+    0x01, 0x01, 0x06, 0x08, 0x0E, 0x00, 0x00, 0x00,
+    0x01, 0x01, 0xFC, 0x11   };
   while(!gps_set_sucess)
   {
     sendUBX(setgnss, sizeof(setgnss)/sizeof(uint8_t));
@@ -500,7 +500,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76         };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76           };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -510,7 +510,7 @@ void setGPS_DynamicModel3()
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91         }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91           }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 
@@ -603,7 +603,7 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84         };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84           };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -684,23 +684,26 @@ void checkDynamicModel() {
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92         }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92           }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 void prepare_data() {
-  sensors.requestTemperatures();
-  temperature1=sensors.getTempCByIndex(0);
-  if(tempsensors==2)
+  if(aprstxstatus==0)
   {
-    temperature2=sensors.getTempCByIndex(1);
-  }
-  if(temperature1==-127)
-  {
-    errorstatus |=(1 << 2); // Set bit 2 indicating the temp sensor is faulty
-  }
-  else
-  {
-    errorstatus &= ~(1 << 2); // Unset bit 2 indicating temp sensor is ok.
+    sensors.requestTemperatures();
+    temperature1=sensors.getTempCByIndex(0);
+    if(tempsensors==2)
+    {
+      temperature2=sensors.getTempCByIndex(1);
+    }
+    if(temperature1==-127)
+    {
+      errorstatus |=(1 << 2); // Set bit 2 indicating the temp sensor is faulty
+    }
+    else
+    {
+      errorstatus &= ~(1 << 2); // Unset bit 2 indicating temp sensor is ok.
+    }
   } 
   gps_check_lock();
   gps_get_position();
@@ -722,7 +725,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                                                                                };
+    0x07, 0x16                                                                                                                                                                  };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -759,7 +762,7 @@ void gps_get_position()
   Serial.flush();
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
-    0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03, 0x0A         };
+    0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03, 0x0A           };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -810,7 +813,7 @@ void gps_get_time()
   Serial.flush();
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
-    0xB5, 0x62, 0x01, 0x21, 0x00, 0x00, 0x22, 0x67         };
+    0xB5, 0x62, 0x01, 0x21, 0x00, 0x00, 0x22, 0x67           };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -840,9 +843,9 @@ void gps_get_time()
 }
 
 void send_APRS() {
+
   ax25_init();
   tx_aprs();
- // delay(1000);
 
 }
 
@@ -856,6 +859,7 @@ void ax25_init(void)
 
 void tx_aprs()
 {
+  aprstxstatus=1;
   PORTD |= _BV(HX1_ENABLE); // Same as digitalWrite(HX1_ENABLE, HIGH); but more efficient
   char slat[5];
   char slng[5];
@@ -940,10 +944,9 @@ ISR(TIMER2_OVF_vect)
       if(!--rest)
       {
         /* Disable radio and interrupt */
-        
-        PORTD &= ~_BV(HX1_ENABLE); // Turn the HX1 Off
-        //PORTA &= ~TXENABLE;
 
+        PORTD &= ~_BV(HX1_ENABLE); // Turn the HX1 Off
+        aprstxstatus=0;
         TIMSK2 &= ~_BV(TOIE2);
 
         /* Prepare state for next run */
@@ -1085,6 +1088,7 @@ uint16_t crccat(char *msg)
 
   return(x);
 }
+
 
 
 
