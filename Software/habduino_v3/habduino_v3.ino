@@ -94,8 +94,6 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define MTX2_ENABLE 7
 
 
-#define max_denominator 1300
-uint16_t best_r = 0, best_n = 0;
 #define HX1_ENABLE 6
 #define HX1_TXD 3
 #define GPS_ON 2
