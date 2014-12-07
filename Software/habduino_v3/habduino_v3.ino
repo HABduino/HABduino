@@ -3,7 +3,7 @@
  http://www.habduino.org
  (c) Anthony Stirk M0UPU 
  
- November 2014 Version 3.0.1
+ November 2014 Version 3.0.2
  
  This is for the Version 3 Habduino Hardware with the MTX2 Radio.
  
@@ -101,11 +101,6 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define ONE_WIRE_BUS 5
 #define ONE_SECOND F_CPU / 1024 / 16
 
-struct frequency_rational
-{
-  uint16_t n;
-  uint16_t r;
-};
 
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
@@ -847,8 +842,8 @@ void gps_get_time()
 void send_APRS() {
   ax25_init();
   tx_aprs();
-  delay(1000);
-  PORTD &= ~_BV(HX1_ENABLE); // Turn the HX1 Off
+ // delay(1000);
+
 }
 
 void ax25_init(void)
@@ -945,6 +940,8 @@ ISR(TIMER2_OVF_vect)
       if(!--rest)
       {
         /* Disable radio and interrupt */
+        
+        PORTD &= ~_BV(HX1_ENABLE); // Turn the HX1 Off
         //PORTA &= ~TXENABLE;
 
         TIMSK2 &= ~_BV(TOIE2);
@@ -1071,95 +1068,6 @@ void setMTX2Frequency()
   delay(50);
   MTX2_EN.end();
 }  
-
-static inline uint32_t hcf(uint32_t a, uint32_t b)
-{
-  while (b)
-  {
-    uint32_t temp;
-    temp = a;
-    a = b;
-    b = temp % b;
-  }
-  return a;
-}
-static inline int64_t abs64(int64_t v)
-{
-  if (v < 0)
-    return -v;
-  else
-    return v;
-}
-struct frequency_rational frequency_magic(uint32_t on)
-{
-  struct frequency_rational r;
-  uint16_t p0 = 0, q0 = 1, p1 = 1, q1 = 0, k;
-  uint32_t q2, a, n, d, h;
-  uint32_t od = 13000000;
-  int64_t compare_p0, compare_p1, compare_n;
-
-  h = hcf(on, od);
-  on /= h;
-  od /= h;
-
-  n = on;
-  d = od;
-
-  if (d <= max_denominator)
-  {
-    r.n = n;
-    r.r = d;
-    return r;
-  }
-
-  for (;;)
-  {
-    uint32_t tempd, tempp1, tempq1;
-
-    tempd = d;
-    a = n / d;  /* gcc should optimise this to one call to divmod. */
-    d = n % d;
-    n = tempd;
-
-    /* if a > max, then q2 > max since after first loop q1 > 1.
-     * This check ensures it doesn't overflow. */
-    if (a > max_denominator)
-      break;
-    q2 = q0 + ((uint32_t) (((uint16_t) a) * q1));
-    if (q2 > max_denominator)
-      break;
-
-    tempp1 = p1;
-    tempq1 = q1;
-    p1 = p0 + ((uint16_t) a) * p1;
-    q1 = q2;
-    p0 = tempp1;
-    q0 = tempq1;
-  }
-
-  k = (max_denominator - q0) / q1;
-
-  p0 = p0 + k * p1;
-  q0 = q0 + k * q1;
-
-  /* which of p0/q0  p1/q1 is closest. */
-  compare_n  = ((uint64_t) on) * ((uint64_t) q0) *  ((uint64_t) q1);
-  compare_p0 = ((uint64_t) od) * ((uint64_t) p0) *  ((uint64_t) q1);
-  compare_p1 = ((uint64_t) od) * ((uint64_t) q0) *  ((uint64_t) p1);
-
-  if (abs64(compare_p0 - compare_n) < abs64(compare_p1 - compare_n))
-  {
-    r.n = p0;
-    r.r = q0;
-  }
-  else
-  {
-    r.n = p1;
-    r.r = q1;
-  }
-  return r;
-}
-
 
 uint16_t crccat(char *msg)
 {
