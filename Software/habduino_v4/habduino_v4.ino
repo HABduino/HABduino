@@ -66,7 +66,7 @@
 /* BITS YOU WANT TO AMEND */
 
 #define MTX2_FREQ 434.485 // format 434.XXX  
-char callsign[9] = "HABDUINO";  // MAX 9 CHARACTERS!!
+char callsign[9] = "CHANGEME";  // MAX 9 CHARACTERS!!
 
 /* BELOW HERE YOU PROBABLY DON'T WANT TO BE CHANGING STUFF */
 
