@@ -2,7 +2,7 @@
 
 This is the original code base for Habduino V4.X boards. It is still suitable for flights but is no longer maintained or supported. Hardware definitions are all current. 
 
-This code provides simultanious (where legal and supported by the hardware installed) transmission of radio telemetry via RTTY and APRS on Habduino Arduino addon boards for High Altitude Ballooning. 
+This code provides simultaneous (where legal and supported by the hardware installed) transmission of radio telemetry via RTTY and APRS on Habduino Arduino addon boards for High Altitude Ballooning. 
 
 ## Move to Flextrack
 
