@@ -6,7 +6,7 @@ This code provides simultaneous (where legal and supported by the hardware insta
 
 ## Move to Flextrack
 
-We strongly recommend you move to Dave Akermans Flextrack as this is updated and maintained. We have forked the Flextrack code here https://github.com/HABduino/FlexTrack and made Habduino specific amendments.
+We strongly recommend you move to Dave Akermans Flextrack as this is updated and maintained. The Flextrack code is here https://github.com/daveake/FlexTrack and has Habduino specific amendments.
 
 ## Disclaimer
 
